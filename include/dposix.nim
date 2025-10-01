@@ -56,15 +56,34 @@ proc unlink*(pathname: cstring): cint {.cdecl, importc: "unlink".}
 var st*:Stat
 
 ## Kill
-proc kill*(pid: Pid, sig: cint): cint {.cdecl, importc: "kill".}
-
-## Flags for kill
-const
-        SIGKILL* = 9
-        SIGTERM* = 15
+proc kill*(pid: cint, sig: cint): cint {.cdecl, importc: "kill".}
 
 ## Waitpid
-proc waitpid*(pid_t: Pid, status: ptr cint, options: cint): cint {.cdecl, importc: "waitpid".}
+proc waitpid*(pid_t: cint, status: ptr cint, options: cint): cint {.cdecl, importc: "waitpid", header: "<sys/wait.h>".}
+
+## SIG flags
+const
+        SIGKILL*:cint = 9
+        SIGTERM*:cint = 15
+        SIGCHLD*:cint = 17
+        SIGUSR1*:cint = 10
+        SIGUSR2*:cint = 12
+
+## Common waitpid flags
+const
+        WNOHANG*:cint = 1
+        WUNTRACED*:cint = 2
+
+## Sync
+proc sync*() {.importc: "sync", header: "<unistd.h>", cdecl.}
+
+## Reboot
+proc reboot*(flag: cint) {.importc: "reboot", header: "<unistd.h>", cdecl.}
+
+## Reboot flags
+const
+        LINUX_REBOOT_CMD_POWER_OFF* = 0x4321FEDC
+        LINUX_REBOOT_CMD_RESTART* = 0x1234567
 
 ## Execve
 proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", cdecl.}
