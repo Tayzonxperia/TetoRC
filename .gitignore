@@ -1,5 +1,10 @@
 non-pub
 nimcache
+
 *.o
 *.pat
 *.ssh
+*.ignore
+*.tmp
+*.temp
+*.stub
