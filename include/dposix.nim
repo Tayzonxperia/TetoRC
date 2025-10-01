@@ -75,10 +75,10 @@ const
         WUNTRACED*:cint = 2
 
 ## Sync
-proc sync*() {.importc: "sync", header: "<unistd.h>", cdecl.}
+proc sync*() {.importc: "sync", cdecl.}
 
 ## Reboot
-proc reboot*(flag: cint) {.importc: "reboot", header: "<unistd.h>", cdecl.}
+proc reboot*(flag: cint) {.importc: "reboot", cdecl.}
 
 ## Reboot flags
 const
@@ -86,7 +86,7 @@ const
         LINUX_REBOOT_CMD_RESTART* = 0x1234567
 
 ## Execve
-proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", cdecl.}
+#proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", cdecl.}
 
 ## Uname
 proc uname*(buf: ptr UtsName): cint {.importc, header: "<sys/utsname.h>".}

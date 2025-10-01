@@ -8,3 +8,4 @@ nimcache
 *.tmp
 *.temp
 *.stub
+*.log

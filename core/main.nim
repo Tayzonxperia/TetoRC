@@ -49,10 +49,10 @@ proc mainfunc() =
       when defined(build_extra):
             tetshell()
 
-      stdout.write("\n")
-      var argv: seq[cstring] = @["/bin/bash.cstring", nil] 
+
+      var argv: seq[cstring] = @["/sbin/openrc-init".cstring, nil] 
       var envp: seq[cstring] = @["TERM=linux".cstring, "PATH=/usr/sbin:/usr/bin:/sbin:/bin".cstring, "EINFO_COLOR=1".cstring, nil]
-      discard execve("/bin/bash".cstring, cast[ptr cstringArray](argv[0].addr), cast[ptr cstringArray](envp[0].addr))
+      discard execve("/sbin/openrc-init".cstring, cast[ptr cstringArray](argv[0].addr), cast[ptr cstringArray](envp[0].addr))
 
 #### Start of bootstrap
 #######################
