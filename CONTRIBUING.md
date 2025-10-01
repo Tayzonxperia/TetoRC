@@ -73,6 +73,11 @@ in which it cannot explain thoughroly
 Documentation/thefileofcode/whatthisthingdoes.{txt,doc,info}
 - If it spans multiple lines, each line it spans needs a seperate "####"
 
+- If adding a new file in the include/ directory, add "d" before its name, say
+you are defining a library called time, you should call the file "dtime" as Nim does
+not allow to import the same module into itself
+
+----------------------
 ## Sample pesuado code
 
 import posix # Imports
