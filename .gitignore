@@ -1,2 +1,5 @@
 non-pub
 nimcache
+*.o
+*.pat
+*.ssh
