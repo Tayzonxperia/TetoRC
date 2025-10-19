@@ -33,12 +33,3 @@ let
     run_flags* = MS_NOSUID or MS_NODEV or MS_NODIRATIME
     tmp_flags* = MS_NOSUID or MS_NODEV or MS_NOATIME
     kasane_flags* = MS_NOSUID or MS_NODEV or MS_NOATIME
-
-## Variables for signals
-
-var
-    REC_SIGTERM*:bool  
-    REC_SIGHUP*:bool 
-    REC_SIGCHLD*:bool
-    REC_SIGUSR1*:bool
-    REC_SIGUSR2*:bool

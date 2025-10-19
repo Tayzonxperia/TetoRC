@@ -40,7 +40,7 @@ case "$ANS" in
 
 	echo "[ INFO ] Building TetoRC with option $ANS"
 	OUT="tetorc-optimized"
-	time nim c -f -d:release "$DEFINE" -d:strip --threads:on --opt:speed --app:console --passC:"$OPT_CFLAGS" --passL:"$OPT_CFLAGS" -o:"$OUT" "$TETORC" && echo \
+	time nim c -f -d:release "$DEFINE" -d:strip --threads:on --opt:speed --app:console --passC:"$OPT_CFLAGS -I" --passL:"/home/taylor/Code/Builds/Nimboot/init/init.c $OPT_CFLAGS" -o:"$OUT" "$TETORC" && echo \
 	"[ INFO ] TetoRC has been compiled!"
 	;;
 

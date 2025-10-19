@@ -5,14 +5,7 @@ import runtime
 ## Program hardcodes
 
 const
-    TETVER*:cstring = "0.40.0"
-
-## Execve hardcodes
-
-const
-    EXECARG*:cstring = "/sbin/openrc-init" # Phased out when cmdline function gets implemented
-    EXECARG1*:cstring = nil
-    EXECENV*:ptr cstring = nil
+    TETVER*:cstring = "0.999.0"
 
 
 ## Paths

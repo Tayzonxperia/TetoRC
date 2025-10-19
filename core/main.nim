@@ -1,10 +1,6 @@
 import posix
 
-import "../include/dposix", init, "../settings/hardcode.nim", "../settings/runtime.nim", "../fs/mount", msg
-
-when defined(build_extra): 
-      import "../utils/shell"
-
+import "../include/dposix", "../include/dcustom", "../settings/hardcode.nim", "../settings/runtime.nim", "../fs/mount", msg
 
 #### Main function
 ##################
@@ -27,37 +23,24 @@ proc mainfunc() =
       discard mounter(KASANE_SRC, KASANE_PATH, KASANE_FS, kasane_flags, cast[pointer](kasane_options))
       discard swaper(SWAP_1, 0)
 
-      ## PID 1 init responibilites
-      initsignals()
-      while true:
-            if REC_SIGCHLD:
-                  var status: cint
-                  while waitpid(-1, status.addr, posix.WNOHANG) > 0:
-                        stdout.write("[ SIG ] Child reaped")
-                        REC_SIGCHLD = false
-            if REC_SIGTERM:
-                  posix.sync()
-                  const msg = "SYSTEM GOING DOWN NOW!"
-                  tmesg(0.cint, msg)
-                  REC_SIGTERM = false
-                  discard umount(KASANE_PATH)
-                  discard umount(TMP_PATH)
-                  discard umount(RUN_PATH)
-                  discard swapoff(SWAP_1)
-                  reboot(LINUX_REBOOT_CMD_POWER_OFF)
-            
-      when defined(build_extra):
-            tetshell()
+      
+      stdout.write("... ... ... ... \n")
+      cmainfunc()
 
-
-      var argv: seq[cstring] = @["/sbin/openrc-init".cstring, nil] 
-      var envp: seq[cstring] = @["TERM=linux".cstring, "PATH=/usr/sbin:/usr/bin:/sbin:/bin".cstring, "EINFO_COLOR=1".cstring, nil]
-      discard execve("/sbin/openrc-init".cstring, cast[ptr cstringArray](argv[0].addr), cast[ptr cstringArray](envp[0].addr))
+      ## 
+      #var argv: seq[cstring] = @["/sbin/openrc-init".cstring, nil] 
+      #var envp: seq[cstring] = @["TERM=linux".cstring, "PATH=/usr/sbin:/usr/bin:/sbin:/bin".cstring, "EINFO_COLOR=1".cstring, nil]
+      #discard dposix.execve("/sbin/openrc-init".cstring, cast[ptr cstringArray](argv[0].addr), cast[ptr cstringArray](envp[0].addr))
 
 #### Start of bootstrap
 #######################
 
-mainfunc()
+when isMainModule:
+  if getpid() != 1:
+      stdout.write("This must run as PID 1!")
+      quit(1)
+  else:
+      mainfunc()
 
 
   

@@ -55,6 +55,10 @@ proc unlink*(pathname: cstring): cint {.cdecl, importc: "unlink".}
 ## Stat (Already defined, needs this var)
 var st*:Stat
 
+## Execve
+#proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", header: "<unistd.h>", cdecl.}
+proc execve*(path: cstring, argv: ptr ptr cchar, envp: ptr ptr cchar): cint {.importc: "execve", header: "<unistd.h>", cdecl.}
+
 ## Kill
 proc kill*(pid: cint, sig: cint): cint {.cdecl, importc: "kill".}
 
@@ -84,9 +88,6 @@ proc reboot*(flag: cint) {.importc: "reboot", cdecl.}
 const
         LINUX_REBOOT_CMD_POWER_OFF* = 0x4321FEDC
         LINUX_REBOOT_CMD_RESTART* = 0x1234567
-
-## Execve
-#proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", cdecl.}
 
 ## Uname
 proc uname*(buf: ptr UtsName): cint {.importc, header: "<sys/utsname.h>".}
