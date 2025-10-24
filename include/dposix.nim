@@ -1,4 +1,5 @@
-import posix # Imports
+######## File containing all POSIX defs
+import posix
 
 ## Mount
 proc mount*(source: cstring, target: cstring, fstype: cstring, flag: uint, data: pointer): cint {.cdecl, importc: "mount".}

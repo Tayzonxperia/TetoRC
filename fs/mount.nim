@@ -1,12 +1,16 @@
-import posix, os, strutils # Imports
+######## File for handling mounting
+import posix, os, strutils
 
-import "../include/dposix", "../settings/hardcode", "../settings/runtime", "../core/msg" # Project imports
+import "../include/dposix", "../settings/hardcode", "../settings/runtime", "../core/msg", "../core/codegen" # Project imports
 
 
 ## Mountchecker
 
+type mountcheckRESULT* = enum
+    Mounted, NotMounted, MountNotCheckable
+
 proc mountcheck*(path: cstring): mountcheckRESULT =
-      if $path in failpath: 
+      if $path in FAILPATH: 
             stderr.write("[ ", BRIGHT_YELLOW, "WARN", RESET, " ] ", BOLD, WHITE, path, RESET, BOLD, " cannot be checked", RESET, "\n")
             return MountNotCheckable
       else: 
@@ -85,15 +89,3 @@ proc umounter*[T](target: T): cint {.inline.}  =
                   let INPUT = readLine(stdin)
                   if INPUT.tolowerascii() != "y":
                         break
-
-
-## Swaper
-
-proc swaper*(path: cstring, flags: cint): cint =
-      let ret1 = swapon(path, flags) 
-      if ret1 == 0:
-            let successmsg = ($path & " mounted as swap")
-            tmesg(ret1, successmsg)
-      else:
-            let warnmsg = "Swapon failed!"
-            tmesg(ret1, warnmsg)

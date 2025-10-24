@@ -1,10 +1,9 @@
 import posix, os # Imports
 
-import "../settings/hardcode" 
+import "../core/codegen" 
 
 
-## tmesg
-
+## Function that writes to display
 proc tmesg*[T](ret: T, successmsg: string, errormsg: string = "") {.inline.} = 
       when T is int:
             ret = ret.cint

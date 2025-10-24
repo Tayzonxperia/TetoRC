@@ -1,9 +1,12 @@
-import posix
+######## Main TetoRC file
+import posix  
+## Imports from stdlib/nimble
 
-import "../include/dposix", "../include/dcustom", "../settings/hardcode.nim", "../settings/runtime.nim", "../fs/mount", msg
+import "../include/dposix", "../include/dcustom"
+import "codegen", "../ipc/cli.nim", "../settings/hardcode.nim", "../settings/runtime.nim", "../fs/mount", "msg"
+
 
 #### Main function
-##################
 
 proc mainfunc() =
       ## Banner and messages
@@ -21,25 +24,27 @@ proc mainfunc() =
       discard mounter(RUN_SRC, RUN_PATH, RUN_FS, run_flags, cast[pointer](run_options))
       discard mounter(TMP_SRC, TMP_PATH, TMP_FS, tmp_flags, cast[pointer](tmp_options))
       discard mounter(KASANE_SRC, KASANE_PATH, KASANE_FS, kasane_flags, cast[pointer](kasane_options))
-      discard swaper(SWAP_1, 0)
 
-      
-      stdout.write("... ... ... ... \n")
-      cmainfunc()
-
-      ## 
-      #var argv: seq[cstring] = @["/sbin/openrc-init".cstring, nil] 
-      #var envp: seq[cstring] = @["TERM=linux".cstring, "PATH=/usr/sbin:/usr/bin:/sbin:/bin".cstring, "EINFO_COLOR=1".cstring, nil]
-      #discard dposix.execve("/sbin/openrc-init".cstring, cast[ptr cstringArray](argv[0].addr), cast[ptr cstringArray](envp[0].addr))
+      cinit()
 
 #### Start of bootstrap
 #######################
 
 when isMainModule:
   if getpid() != 1:
-      stdout.write("This must run as PID 1!")
-      quit(1)
-  else:
+      stdout.write(BOLD, "TetoRC triggered! Choose mode: \n ---| CLI \n ---| Exit \n", RESET)
+      let tetomode = stdin.readline
+      case tetomode:
+      of "CLI":
+            tetcli()
+      of "EXIT":
+            stdout.write(BOLD, "TetoRC is exiting as per user input... \n", RESET)
+            quit(0)
+      else:
+            stdout.write(BOLD, "TetoRC is exiting - Reason: Unknown command \n", RESET)
+            quit(1)
+else:
+      stdout.write(BOLD, "TetoRC is loading ...", RESET, "\n")
       mainfunc()
 
 

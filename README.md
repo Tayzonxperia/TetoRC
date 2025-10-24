@@ -30,6 +30,6 @@ samples/ - Proof of concepts or precompiled test binaries
 to run in a VM for the user to test TetoRC and see if
 it works for them
 
-Install/ - Build scripts 
+Build/ - Build scripts 
 
 Documentation/ - Manuals or docs explaining how TetoRC works or can be used

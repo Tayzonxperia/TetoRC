@@ -9,3 +9,5 @@ nimcache
 *.temp
 *.stub
 *.log
+*.AppImage
+version.txt

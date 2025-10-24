@@ -1,6 +1,6 @@
 #### Building
 
-Use the ~/Projectroot/Install/compile.sh to make TetoRC.
+Use the ~/Projectroot/Build/compile.sh to make TetoRC.
 Run it and it will provide a dialogue to build TetoRC.
 
 ## Build script options
@@ -14,7 +14,7 @@ use this to build extra or minimal features for TetoRC for your needs
 
 1. Standard
 -----------
-Standard creates a standard binary usable for an purpose
+Standard creates a standard binary usable for any purpose
 
 2. Debug
 --------
@@ -27,7 +27,7 @@ for getting best preformace, note build times will increase
 
 4. Tiny
 -------
-Tiny tried to create the smallest possible binary it can, 
+Tiny tries to create the smallest possible binary it can, 
 reducing size
 
 

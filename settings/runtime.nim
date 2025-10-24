@@ -5,16 +5,24 @@ import "../include/dposix"
 
 
 ## Program params
-
-const
-    DEBUG*:bool = true
-
 let
     SYSCONFDIR*:cstring = "/etc"
     RUNSTATEDIR*:cstring = "/run"
+    TMPFSDIR*:cstring = "/tmp"
 
+let
+    HOSTNAME*:cstring = "EDEIC"
+    
 ## Filesystem options
+let
+    ROOTFS_FSVAR*:cstring = "ext4"
+    TMP_FSVAR*:cstring = "tmpfs"
+    KASANE_FSVAR*:cstring = "ext4"
 
+let
+    ROOTFS_DEV*:cstring = "/dev/sda1"
+    KASANE_DEV*:cstring = "/dev/sda2"
+    SWAP1_DEV*:cstring = "/dev/sda3"
 let
     proc_options*:cstring = ""
     sys_options*:cstring = ""

@@ -12,6 +12,41 @@ if [ -z "$DEFINE" ]; then
 	DEFINE="-d:null"
 fi
 echo "You have defined '$DEFINE'"
+
+read -p "[ PROMPT ] Verbosity level? " VERB
+case "$VERB" in
+0)
+
+	echo "[ INFO ] Compiler verbosity set to $VERB"
+	VERB="--verbosity:0"
+	;;
+
+1)
+
+	echo "[ INFO ] Compiler verbosity set to $VERB"
+	VERB="--verbosity:1"
+	;;
+
+2)
+
+	echo "[ INFO ] Compiler verbosity set to $VERB"
+	VERB="--verbosity:2"
+	;;
+
+3)
+
+	echo "[ INFO ] Compiler verbosity set to $VERB"
+	VERB="--verbosity:3"
+	;;
+
+*)
+	
+	echo "[ INFO ] Incorrect choice! Aborting..."
+	exit 1
+	;;
+esac
+	
+	
 echo "Availible preset options for compile:"
 echo "Default (1)"
 echo "Debug (2)"
@@ -24,7 +59,7 @@ case "$ANS" in
 
 	echo "[ INFO ] Building TetoRC with option $ANS"
 	OUT="tetorc"
-	time nim c -f -d:release "$DEFINE" -d:strip --threads:on --opt:speed --app:console --passC:"$CFLAGS" --passL:"$CFLAGS" -o:"$OUT" "$TETORC" && echo \
+	time nim c -f -d:release "$DEFINE" -d:strip "$VERB" --threads:on --opt:speed --app:console --passC:"$CFLAGS" --passL:"$CFLAGS" -o:"$OUT" "$TETORC" && echo \
 	"[ INFO ] TetoRC has been compiled!"
 	;;
 
@@ -32,7 +67,7 @@ case "$ANS" in
 
 	echo "[ INFO ] Building TetoRC with option $ANS"
 	OUT="tetorc-debug"
-	time nim c -f -d:debug "$DEFINE" --app:console --passC:"$DEBUG_CFLAGS" --passL:"$DEBUG_CFLAGS" -o:"$OUT" "$TETORC" && echo \
+	time nim c -f -d:debug "$DEFINE" "$VERB" --app:console --passC:"$DEBUG_CFLAGS" --passL:"$DEBUG_CFLAGS" -o:"$OUT" "$TETORC" && echo \
 	"[ INFO ] TetoRC has been compiled!"
 	;;
 
@@ -40,7 +75,7 @@ case "$ANS" in
 
 	echo "[ INFO ] Building TetoRC with option $ANS"
 	OUT="tetorc-optimized"
-	time nim c -f -d:release "$DEFINE" -d:strip --threads:on --opt:speed --app:console --passC:"$OPT_CFLAGS -I" --passL:"/home/taylor/Code/Builds/Nimboot/init/init.c $OPT_CFLAGS" -o:"$OUT" "$TETORC" && echo \
+	time nim c -f -d:release -d:optimized "$DEFINE" -d:strip "$VERB" --threads:on --opt:speed --app:console --passC:"$OPT_CFLAGS" --passL:"$OPT_CFLAGS" -o:"$OUT" "$TETORC" && echo \
 	"[ INFO ] TetoRC has been compiled!"
 	;;
 
@@ -48,7 +83,7 @@ case "$ANS" in
 
 	echo "[ INFO ] Building TetoRC with option $ANS"
 	OUT="tetorc-tiny"
-	time nim c -f -d:release "$DEFINE" -d:strip --threads:on --opt:size --app:console --passC:"$SMALL_CFLAGS" --passL:"$SMALL_CFLAGS" -o:"$OUT" "$TETORC" && echo \
+	time nim c -f -d:release -d:tiny "$DEFINE" -d:strip "$VERB" --threads:on --opt:size --app:console --passC:"$SMALL_CFLAGS" --passL:"$SMALL_CFLAGS" -o:"$OUT" "$TETORC" && echo \
 	"[ INFO ] TetoRC has been compiled!"
 	;;
 	

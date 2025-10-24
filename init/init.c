@@ -1,4 +1,3 @@
-// Includes
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -6,11 +5,12 @@
 #include <sys/wait.h>
 
 pid_t agetty_pid = -1;
+cosnt hostname = "EDEIC";
 
 void spawn_agetty() {
     pid_t pid = fork();
     if (pid == 0) {
-        execlp("/sbin/agetty", "/sbin/agetty", "tty1", "38400", NULL);
+        execlp("/sbin/agetty", "agetty", "-a root", "tty1", "38400", NULL);
         perror("exec agetty");
         _exit(1);
     } else if (pid > 0) {
@@ -27,7 +27,6 @@ void reap_children(int sig) {
     pid_t pid;
     while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
         if (pid == agetty_pid) {
-            // Do something?
             sleep(1);
             printf("Reaped child pid (agetty): %d\n", pid);
             }
@@ -44,13 +43,13 @@ void shutdown_handler(int sig) {
     exit(0);
 }
 
-int cmainfunc() {
+int cinit() {
     signal(SIGCHLD, reap_children);
     signal(SIGTERM, shutdown_handler);
     signal(SIGINT, shutdown_handler);
 
     setenv("PATH", "/usr/sbin:/usr/bin:/sbin:/bin", 1);
-    sethostname("TEST", 5);
+    sethostname("T", 5);
     spawn_agetty();
 
     while (1) pause();

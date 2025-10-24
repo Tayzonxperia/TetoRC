@@ -1,98 +1,182 @@
-#### Code styling
+# TetoRC Coding Style Guide
 
-- Nim style indentation required, even when coding in a different language
+**Version 1.1 — Authored by Taylor (Tayzonxperia)**  
+*Designed for Nim, C, and Bash — maximum readability, logical rhythm, and aesthetic structure.*
 
-- Braces (Not used in Nim, but when used elsewhere) follow style:
+---
 
-"function()  
+## Purpose
+
+This document defines the **TetoRC Coding Standard** — a unified style philosophy ensuring clarity, predictability, and aesthetic consistency across all code written for the TetoRC ecosystem.
+
+TetoRC code should look intentional, read like structured architecture, and communicate purpose visually.
+
+---
+
+## Core Principles
+
+1. **Readability is king.** Code is read more than it’s written.  
+2. **Consistency creates rhythm.** Identical patterns lower mental overhead.  
+3. **Structure mirrors logic.** Indentation and braces are cognitive signposts.  
+4. **No wasted symbols.** Every space, brace, and comment has a reason.
+
+---
+
+## Indentation and Alignment
+
+- **Tabs** are required for Nim.  
+- **Tabs or 4 spaces** are acceptable for C and Bash.  
+  - *Equivalence:* `1 tab = 4 spaces`.  
+- **Operators** should be surrounded by a single space:  
+  ```c
+  int result = a + b;
+  ```
+- **Blank lines** are used sparingly — to visually separate code blocks or logical sections.
+
+---
+
+## Braces and Parentheses Style
+
+Each bracket or parenthesis occupies its own line — never attached to function names or control statements.
+
+### Example — C
+```c
+int add
+(
+    int a,
+    int b
+)
 {
-    code
-    code
+    return a + b;
 }
-"
+```
 
-- Code must only be seperated when needed or it differs enough, example:
+### Example — Nim
+```nim
+proc add
+(
+    a: int,
+    b: int
+): int =
+    return a + b
+```
 
-" function() xyz
-    code code
-    code code
-    code code
-    code code
-    code code
-    code code
-    code code
-    code code
-    code code
-    return 0
+### Example — Bash
+```bash
+add()
+(
+    local a="$1"
+    local b="$2"
+    echo $((a + b))
+)
+```
 
-    new code 
-    new code
-    new code
-    new code
-    new code
-    new code
-    return 1
-"
+**Rationale:**  
+This visually isolates code blocks and enhances vertical readability — especially useful for low-level or nested logic.
 
+---
 
-- Functions follow style "thisfunction"
+## Naming Conventions
 
-- Variables follow style "THISVAR" for constants, "thisvar" for vars and "THISVAR" for lets 
-or equivelents
+| Type | Nim | C | Bash | Example |
+|------|-----|---|-------|----------|
+| Mutable variable | `var_name` | `var_name` | `var_name` | `var result` |
+| Immutable variable | `LET_NAME` | `const LET_NAME` | `readonly LET_NAME` | `let LET_NAME=42` |
+| Constant | `CONSTNAME` | `#define CONSTNAME` | N/A | `CONSTNAME = 64` |
+| Enum / Struct / Type | `ObjectName` | `StructName` | — | `UserInfo`, `IPCData` |
 
-- Enums follow style "ThisEnum", same for Objects/Structs
+### Function Naming
+- All lowercase or snake_case (`start_ipc`, `spawn_process`).  
+- Short, clear, and action-oriented.  
+- Prefer multiple small, single-purpose functions over one long monolith.
 
-- Imports follow style "Import stdlibray \n Import somelocalfile", \n is a actual newline
-Imports must always be at top of file, local importing must be "../folder/file" if its in 
-another dir, it must be quoted, stdlib imports or same-dir imports must not be quoted
+---
 
-= Comment rules:
+## Comment Hierarchy (Universal System)
 
-- Comments can be in your own style, but it has to convey meaning, no
-jargon unless you explain it, but it cannot be plain simple or basic
-in which it cannot explain thoughroly
+TetoRC code uses a hierarchical comment system consistent across Nim, Bash, and C.
 
-"# Xyz" for simple inlines
-- Inline comments follow style "while this.code # This does this and that"
+| Purpose | Nim | Bash | C | INI |
+|----------|-----|------|--|------|
+| File Header | `########` | `########` | `////////` | `;;;;;;;;`
+| Major Section | `####` | `####` | `////` | `;;;;`
+| Minor Section / Block | `##` | `##` | `/* */` | `;;`
+| Inline Comment | `#` | `#` | `//` | `;`
 
-"## Xyz 
- ######" for headers
+### Example — C
+```c
+////////
+// TetoRC Init Manager
+// Core Logic
+////////
 
- - Where the bottom row of comment hashes must be as long as header text
+// Function to start IPC listener
+int start_ipc()
+{
+    // Initialize socket
+    int socket = init_socket();
+}
+```
 
+### Example — Nim
+```nim
+########
+## TetoRC Init Manager
+## Core Logic
+########
 
-" ## Xyz ... " for longer inlines
+## Function to start IPC listener
+proc start_ipc(): void =
+    # Initialize socket
+    var socket = createSocket()
+```
 
-- Follows same rule as single hash inlines
+### Example — Bash
+```bash
+########
+## TetoRC Init Manager
+## Core Logic
+########
 
+## Function to start IPC listener
+start_ipc()
+(
+    # Initialize socket
+    echo "Starting IPC..."
+)
+```
 
-" #### Xyz ... ... " for large inlines or explainations
+---
 
-- Can be above/below code, spanning multiple lines, if it spans 8+ lines it should
-- be in its own .txt, .doc or .info file, place the specifed docs in ~/Projectroot/
-Documentation/thefileofcode/whatthisthingdoes.{txt,doc,info}
-- If it spans multiple lines, each line it spans needs a seperate "####"
+## File Layout Convention
 
-- If adding a new file in the include/ directory, add "d" before its name, say
-you are defining a library called time, you should call the file "dtime" as Nim does
-not allow to import the same module into itself
+1. **File Header**
+   - Name, purpose, author, license.
+2. **Imports / Includes**
+3. **Constants and Globals**
+4. **Function Definitions**
+5. **Main Entry Point**
+6. **Footer (optional)**  
+   Example:
+   ```c
+   ////// END OF FILE //////
+   ```
 
-----------------------
-## Sample pesuado code
+---
 
-import posix # Imports
-import "../include/dposix" # Project imports
+## Style Enhancements
 
-myfunc(): cint {.inline.} =
-    var x = 2
-    const Y = 6
-    let z = 914
-    while x != z:
-        x + 1
-        stdout.write "This is ", x ## We keep adding 1 to x while its not equal to z
-        #### Blah blah blah blah blah blah code linux blah
-        #### Blah blah blah i love coding blah blahhhh 
-        more code more code more code and return 0
+- Align parameters and assignments vertically where practical:
+  ```c
+  int a   = 5;
+  int sum = a + b;
+  ```
+- Group related functions with visible headers:
+  ```c
+  //// Process Management ////
+  ```
 
-        new code more code more code more code more code else
-        return 1 # Return 1 to signal failure
+---
+
+**End of TetoRC Style Guide**
+````
