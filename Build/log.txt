@@ -1,0 +1,43 @@
+[93mWarning: [0m[1mCLI mode is disabled in debug builds of TetoRC 
+[1mTetoRC triggered! Showing debug attrs... 
+[0m[1mINI: {"devices_src": {"proc": "procfs", "sys": "sysfs", "dev": "devfs", "devpts": "devptsfs", "run": "runfs", "tmp": "tmpfs", "shm": "shmfs", "cgroup2": "cgroup2fs", "security": "securityfs", "kasane": "/dev/sda2", "swap": "/dev/sda3"}, "devices_fs": {"proc": "proc", "sys": "sysfs", "dev": "devtmpfs", "devpts": "devpts", "run": "tmpfs", "tmp": "tmpfs", "shm": "tmpfs", "cgroup2": "cgroup2", "security": "securityfs", "kasane": "ext4"}, "devices_path": {"proc": "/proc", "sys": "/sys", "dev": "/dev", "devpts": "/dev/pts", "run": "/run", "tmp": "/tmp", "shm": "/dev/shm", "cgroup2": "/sys/fs/cgroup", "security": "/sys/kernel/security", "kasane": "/kasane"}, "filesystem_options": {"proc": "", "sys": "", "dev": "", "devpts": "", "run": "size=128M,mode=755,inode64", "tmp": "size=512M,mode=1777", "shm": "", "cgroup2": "", "security": "", "kasane": ""}}
+CFG: /home/taylor/Code/Builds/Nimboot/core/mount.cfg[0m
+ 
+[94m/tmp[0m[1m --> [0m[34m0x1030[0m
+[94m/dev/pts[0m[1m --> [0m[34m0x0[0m
+[94m/dev/shm[0m[1m --> [0m[34m0x0[0m
+[94m/proc[0m[1m --> [0m[34m0x14[0m
+[94m/dev[0m[1m --> [0m[34m0x0[0m
+[94m/sys/kernel/security[0m[1m --> [0m[34m0x0[0m
+[94m/run[0m[1m --> [0m[34m0x2054[0m
+[94m/sys[0m[1m --> [0m[34m0x14[0m
+[94m/kasane[0m[1m --> [0m[34m0x1030[0m
+[94m/sys/fs/cgroup[0m[1m --> [0m[34m0x0[0m
+
+[1mMounting info: (SRC, PATH, FS, FS_MNT, FS_OPT) 
+
+ PROC SRC: 0
+ SYS_SRC: 1030
+ RUN_SRC: runfs
+ TMP_SRC: tmpfs
+ KASANE_SRC: kasane
+ PROC_PATH: /proc
+ SYS_PATH: /sys
+ RUN_PATH: /run
+ TMP_PATH: /tmp
+ KASANE_PATH: /kasane
+ PROC_FS: proc
+ SYS_FS: sysfs
+ RUN_FS: tmpfs
+ TMP_FS: tmpfs
+ KASANE_FS: ext4
+ PROC_FS_MNT: 14
+ SYS_FS_MNT: 14
+ RUN_FS_MNT: 2054
+ TMP_FS_MNT: 1030
+ KASANE_FS_MNT: [T]1030
+ PROC_FS_OPT: 
+ SYS_FS_OPT: 
+ RUN_FS_OPT: size=128M,mode=755,inode64
+ TMP_FS_OPT: size=512M,mode=1777
+ KASANE_FS_OPT: 
