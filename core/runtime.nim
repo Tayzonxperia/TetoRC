@@ -8,33 +8,24 @@ import "codegen"
 
 #### Config loading and parsing
 
-## INI (teto.ini)
-
+# Load teto.ini
 var cfg*: Config
 if fileexists("/etc/tetorc/teto.ini"):
     cfg = loadconfig("/etc/tetorc/teto.ini")
-elif defined(debug):
-    if fileexists("/home/taylor/Code/Builds/Nimboot/core/teto.ini"):
-        cfg = loadconfig("/home/taylor/Code/Builds/Nimboot/core/teto.ini")
-    elif fileexists("/etc/tetorc/teto.ini"):
-            cfg = loadconfig("/etc/tetorc/teto.ini")
+elif defined(debug) and fileexists("/home/taylor/Code/Builds/Nimboot/core/teto.ini"):
+    cfg = loadconfig("/home/taylor/Code/Builds/Nimboot/core/teto.ini")
 else:
-    stdout.write(BOLD, "INI file not found!", RESET)
+    quit(BRIGHT_RED & "INI file not found!"& RESET)
 
-## CFG (mount.cfg)
- 
+# Load mount.cfg
 var mountcfg*: string
 if fileexists("/etc/tetorc/mount.cfg"):
     mountcfg = "/etc/tetorc/mount.cfg"
-elif defined(debug):
-    if fileexists("/home/taylor/Code/Builds/Nimboot/core/mount.cfg"):
-        mountcfg = "/home/taylor/Code/Builds/Nimboot/core/mount.cfg"
-    elif fileexists("/etc/tetorc/mount.cfg"):
-            mountcfg = "/etc/tetorc/mount.cfg"
-    else:
-        stdout.write(BOLD, "Mount CFG file not found!", RESET)
+elif defined(debug) and fileexists("/home/taylor/Code/Builds/Nimboot/core/mount.cfg"):
+    mountcfg = "/home/taylor/Code/Builds/Nimboot/core/mount.cfg"
 else:
-    stdout.write(BOLD, "Mount CFG file not found!", RESET)
+    quit(BRIGHT_RED & "Mount CFG file not found!" & RESET)
+
 
 ## Parsing
 
