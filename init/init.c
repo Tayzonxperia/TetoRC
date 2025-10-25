@@ -5,7 +5,8 @@
 #include <sys/wait.h>
 
 pid_t agetty_pid = -1;
-cosnt hostname = "EDEIC";
+pid_t bash_pid = -1;
+
 
 void spawn_agetty() {
     pid_t pid = fork();
@@ -21,6 +22,20 @@ void spawn_agetty() {
     }
 }
 
+void spawn_bash() {
+    pid_t pid = fork();
+    if (pid==0) {
+        execlp("/bin/bash", "bash", NULL);
+        perror("exec bash");
+        _exit(1);
+    } else if (pid > 0) {
+        bash_pid = pid;
+        printf("Bash online! (pid: %d) \n", pid);
+    } else {
+        perror("fork");
+    }
+}
+    
 void reap_children(int sig) {
     (void)sig;
     int status;
@@ -29,12 +44,14 @@ void reap_children(int sig) {
         if (pid == agetty_pid) {
             sleep(1);
             printf("Reaped child pid (agetty): %d\n", pid);
+            spawn_bash();
             }
         else {
             sleep(1);
             printf("Reaped child pid: %d\n", pid);
         }
-}   }
+    }
+}
 
 void shutdown_handler(int sig) {
     printf("Received signal %d, shutting down...\n", sig);
@@ -49,7 +66,7 @@ int cinit() {
     signal(SIGINT, shutdown_handler);
 
     setenv("PATH", "/usr/sbin:/usr/bin:/sbin:/bin", 1);
-    sethostname("T", 5);
+    sethostname("T", 1);
     spawn_agetty();
 
     while (1) pause();

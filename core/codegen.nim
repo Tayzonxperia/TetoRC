@@ -1,5 +1,7 @@
 ######## Compiler code generation file
-import posix, os, strutils
+import posix, os, strutils, tables
+
+import "../include/dposix"
 
 
 #### Defined constants and lets
@@ -34,6 +36,27 @@ when defined(debug):
     const TMPVERSIONFILE = "version.tmp"
 else:
     const VERSIONFILE = "../version.txt"
+
+## Map of all BITWISE flags 
+
+var OPT_MAP* = initTable[string, uint]()
+OPT_MAP["MS_RDONLY"] = MS_RDONLY
+OPT_MAP["MS_NOSUID"] = MS_NOSUID
+OPT_MAP["MS_NODEV"] = MS_NODEV
+OPT_MAP["MS_NOEXEC"] = MS_NOEXEC
+OPT_MAP["MS_SYNCHRONOUS"] = MS_SYNCHRONOUS
+OPT_MAP["MS_REMOUNT"] = MS_REMOUNT
+OPT_MAP["MS_MANDLOCK"] = MS_MANDLOCK
+OPT_MAP["MS_DIRSYNC"] = MS_DIRSYNC
+OPT_MAP["MS_NOSYMFOLLOW"] = MS_NOSYMFOLLOW
+OPT_MAP["MS_NOATIME"] = MS_NOATIME
+OPT_MAP["MS_NODIRATIME"] = MS_NODIRATIME
+OPT_MAP["MS_BIND"] = MS_BIND
+OPT_MAP["MS_MOVE"] = MS_MOVE
+OPT_MAP["MS_REC"] = MS_REC
+OPT_MAP["MS_SILENT"] = MS_SILENT
+OPT_MAP["nil"] = 0'u32
+
 
 #### Compiler codegenerator
 static:
