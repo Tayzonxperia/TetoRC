@@ -2,7 +2,7 @@
 import posix, os, strutils, tables, parsecfg
 
 ## Include imports
-import "../include/dposix"
+import "../../include/dposix"
 
 ## Project imports
 import "codegen"

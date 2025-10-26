@@ -62,7 +62,7 @@ const
 
     PROC_FS_MNT* = MS_NOSUID or MS_NOEXEC or MS_NODEV
     SYS_FS_MNT* = MS_NOSUID or MS_NOEXEC or MS_NODEV
-    DEV_FS_MNT* = ""
+    DEV_FS_MNT* = 0'u32
     RUN_FS_MNT* = MS_NOSUID or MS_NODEV or MS_NODIRATIME
     TMP_FS_MNT* = MS_NOSUID or MS_NODEV or MS_NOATIME
 
@@ -79,8 +79,8 @@ static:
     echo(BOLD & "Compiling TetoRC (Stage " & $STAGE & ") at " & RESET & BRIGHT_BLUE & CompileTime & " ~ " & CompileDate & RESET)
     echo(BOLD & "Computing compiler code..." & RESET)
 
-    #echo(BRIGHT_GREEN & "---> " & RESET & "Computing mount tables...")
-    #
+    echo(BRIGHT_GREEN & "---> " & RESET & "Computing mount tables...")
+    
 
 #### Computed constants and lets ####
 #####################################

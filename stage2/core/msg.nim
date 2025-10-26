@@ -1,6 +1,6 @@
 import posix, os # Imports
 
-import "../core/codegen" 
+import "codegen" 
 
 
 ## Function that writes to display

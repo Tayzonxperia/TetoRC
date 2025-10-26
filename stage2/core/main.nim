@@ -2,7 +2,7 @@
 import posix, os, tables
 
 ## Include imports
-import "../include/dposix", "../include/dcustom"
+import "../../include/dposix", "../../include/dcustom"
 
 ## Project imports
 import "codegen", "runtime", "../fs/mount", "msg", "emergency"

@@ -1,7 +1,7 @@
 ######## File for handling mounting
 import posix, os, strutils
 
-import "../include/dposix", "../core/codegen", "../core/runtime", "../core/msg"
+import "../../include/dposix", "../core/codegen", "../core/runtime", "../core/msg"
 
 
 ## Mountchecker

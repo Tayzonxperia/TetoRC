@@ -1,6 +1,6 @@
 import posix, os, strutils
 
-import "../include/dposix"
+import "../..include/dposix"
 import "../settings/hardcode", "../settings/runtime", "socket", "../core/codegen"
 
 

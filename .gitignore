@@ -1,4 +1,4 @@
-non-pub
+Build/*tetorc*
 nimcache
 
 *.o
@@ -10,5 +10,4 @@ nimcache
 *.stub
 *.log
 *.AppImage
-version.txt
-
+version.*

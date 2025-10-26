@@ -2,7 +2,7 @@
 import posix, os, strutils, tables
 
 ## Include imports
-import "../include/dposix"
+import "../../include/dposix"
 
 
 
