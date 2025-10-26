@@ -1,14 +1,10 @@
 ######## File for handling mounting
-import posix, os, strutils
+import posix, strutils
 
-import "../include/dposix", "../core/codegen", "../core/runtime", "../core/msg" # Project imports
+import "../../include/dposix", "../core/codegen", "../core/msg"
 
 
 ## Mountchecker
-
-type mountcheckRESULT* = enum
-    Mounted, NotMounted, MountNotCheckable
-
 proc mountcheck*(path: cstring): mountcheckRESULT =
       if $path in FAILPATH: 
             stderr.write("[ ", BRIGHT_YELLOW, "WARN", RESET, " ] ", BOLD, WHITE, path, RESET, BOLD, " cannot be checked", RESET, "\n")

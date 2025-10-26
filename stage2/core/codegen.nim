@@ -1,10 +1,13 @@
 ######## Compiler code generation file
 import posix, os, strutils, tables
 
+## Include imports
 import "../include/dposix"
 
 
-#### Defined constants and lets
+
+#### Defined constants and lets ####
+####################################
 
 ## Escape codes
 const
@@ -28,7 +31,7 @@ const
 ## Animation chars
 const SPINNERANIMATION* = ["|", "/", "-", "\\"]
 
-## Mountchecker terminate paths
+## Mountchecker termination paths
 const FAILPATH* = @["/", "/dev", "/proc"]
 
 ## File placements
@@ -38,7 +41,6 @@ else:
     const VERSIONFILE = "../version.txt"
 
 ## Map of all BITWISE flags 
-
 var OPT_MAP* = initTable[string, uint]()
 OPT_MAP["MS_RDONLY"] = MS_RDONLY
 OPT_MAP["MS_NOSUID"] = MS_NOSUID
@@ -58,7 +60,9 @@ OPT_MAP["MS_SILENT"] = MS_SILENT
 OPT_MAP["nil"] = 0'u32
 
 
-#### Compiler codegenerator
+#### Compiler codegenerator ####
+################################
+
 static:
     echo(BOLD & "Compiling TetoRC at " & RESET & BRIGHT_BLUE & CompileTime & " ~ " & CompileDate & RESET)
     echo(BOLD & "Computing compiler code..." & RESET)
@@ -89,7 +93,8 @@ static:
         echo(BOLD & "TetoRC " & RESET & BRIGHT_CYAN & "compiling..." & RESET)
     
 
-#### Computed constants and lets
+#### Computed constants and lets ####
+#####################################
 
 ## Version
 when defined(debug):

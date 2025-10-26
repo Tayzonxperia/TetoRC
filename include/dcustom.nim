@@ -1,3 +1,4 @@
 ######## File defining custom C, CXX, ASM and JS here
 
-proc cinit*() {.importc, cdecl.}
+## Main C init function
+proc cmain*() {.importc, cdecl.}

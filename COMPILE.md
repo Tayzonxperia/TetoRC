@@ -1,33 +1,32 @@
-#### Building
+Building TetoRC
 
-Use the ~/Projectroot/Build/compile.sh to make TetoRC.
-Run it and it will provide a dialogue to build TetoRC.
+To build TetoRC, run the build script located at:
+~/Projectroot/Build/compile.sh
 
-## Build script options
+This script provides an interactive prompt that lets you choose how to compile TetoRC depending on your needs.
 
-Defining:
+Build Profiles
 
-Nim compiler supports defining at compile time to modify code and change how it works, you can
-use this to build extra or minimal features for TetoRC for your needs
-
-1-4 Selection options:
+The Nim compiler supports build-time definitions (--define: flags) that let you toggle features or optimize the binary for different use cases.
+The build script presents four preset configurations:
 
 1. Standard
------------
-Standard creates a standard binary usable for any purpose
+
+Builds a regular release binary suitable for general use.
 
 2. Debug
---------
-Debug creates a debug binary, useful for testing and development
+
+Builds a debug binary with verbose output and debugging symbols.
+Use this for testing, development, or diagnosing runtime behavior.
 
 3. Optimized
-------------
-Optimized creates a binary tailored for your system, useful
-for getting best preformace, note build times will increase
+
+Builds a system-optimized binary tuned for performance on your hardware.
+Note: compile times will increase due to higher optimization levels.
 
 4. Tiny
--------
-Tiny tries to create the smallest possible binary it can, 
-reducing size
 
+Builds the smallest possible binary by disabling nonessential features.
+Ideal for embedded or minimalist systems.
 
+Example:

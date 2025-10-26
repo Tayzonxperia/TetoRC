@@ -1,0 +1,25 @@
+TetoRC Service and Init System
+Copyright (C) 2025 Wakana Kisarazu (Tayzonxperia - [Github], wakanakisarazu - [Discord])
+
+This program is free software; you can redistribute it and/or modify it
+under the terms of the GNU General Public License version 2.0
+
+
+-----------------------
+Credits & Attributions
+-----------------------
+Core Developer and leader of the TetOS project:
+- Wakana Kisaazu ("Taylor") (https://github.com/Tayzonxperia)
+
+Inspired by:
+- Kasane Teto (https://kasaneteto.jp) <3
+- OpenRC (https://github.com/OpenRC/openrc)
+- sysvinit (https://savannah.nongnu.org/projects/sysvinit)
+- BusyBox (https://busybox.net)
+
+Special Thanks:
+- The Free Software Foundation for maintaining GPL 
+- Linus Torvalds and all the Linux maintainers for providing the Linux kernel (https://www.kernel.org)
+- Sparkles-Laurel for LAMENT, which powers Yoshiwara LAMENT (https://github.com/Sparkles-Laurel and https://getconfigured.org)
+- thedistromaker for tinyinit , which powers Tinit (https://github.com/thedistromaker)
+- nwp8861 for techo, which powers TASCII (https://github.com/nwp8861)

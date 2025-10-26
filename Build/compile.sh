@@ -1,95 +1,72 @@
-#/bin/bash
+#!/bin/bash
 
 CFLAGS="-O2 -pipe -ffreestanding -s"
 DEBUG_CFLAGS="-g -O0 -pipe -ffreestanding"
 OPT_CFLAGS="-march=native -mtune=native -O3 -flto -pipe -fno-exceptions -fno-rtti -fdata-sections -ffunction-sections -ffreestanding -s"
 SMALL_CFLAGS="-Os -flto -pipe -s"
-TETORC="$(pwd)/../core/main.nim"
+
+TETORC_S1="$(pwd)/../stage1/core/main.nim"
+TETORC_S2="$(pwd)/../stage2/core/main.nim"
 
 echo "[ INFO ] How would you like to build TetoRC?"
-read -p "[ PROMPT ] Do you want to define anything? " DEFINE
-if [ -z "$DEFINE" ]; then
-	DEFINE="-d:null"
-fi
-echo "You have defined '$DEFINE'"
+read -p "[ PROMPT ] Build Stage 1, Stage 2, or both? (1/2/both): " STAGE
+STAGE=${STAGE,,} # lowercase it
 
-read -p "[ PROMPT ] Verbosity level? " VERB
-case "$VERB" in
-0)
+if [ -z "$STAGE" ]; then STAGE="2"; fi
 
-	echo "[ INFO ] Compiler verbosity set to $VERB"
-	VERB="--verbosity:0"
-	;;
+read -p "[ PROMPT ] Any defines? (e.g. -d:debug) " DEFINE
+if [ -z "$DEFINE" ]; then DEFINE="-d:null"; fi
+echo "[ INFO ] You have defined '$DEFINE'"
 
-1)
+read -p "[ PROMPT ] Verbosity level (0–3): " VERB
+VERB=${VERB:-1}
+echo "[ INFO ] Compiler verbosity set to $VERB"
+VERB="--verbosity:$VERB"
 
-	echo "[ INFO ] Compiler verbosity set to $VERB"
-	VERB="--verbosity:1"
-	;;
+echo "Available compile presets:"
+echo "1) Default"
+echo "2) Debug"
+echo "3) Optimized"
+echo "4) Tiny"
+read -p "[ PROMPT ] Select preset: " ANS
 
-2)
+# --- Build function ---
+build() {
+    local SRC="$1"
+    local OUT="$2"
+    echo "[ BUILD ] Compiling $OUT..."
+    time nim c -f $DEFINE_FLAGS "$DEFINE" "$VERB" \
+        --passC:"$CSET" --passL:"$CSET" \
+        -o:"$OUT" "$SRC" \
+        && echo "[ OK ] $OUT compiled successfully!" \
+        || { echo "[ ERROR ] Failed to build $OUT"; exit 1; }
+}
 
-	echo "[ INFO ] Compiler verbosity set to $VERB"
-	VERB="--verbosity:2"
-	;;
-
-3)
-
-	echo "[ INFO ] Compiler verbosity set to $VERB"
-	VERB="--verbosity:3"
-	;;
-
-*)
-	
-	echo "[ INFO ] Incorrect choice! Aborting..."
-	exit 1
-	;;
-esac
-	
-	
-echo "Availible preset options for compile:"
-echo "Default (1)"
-echo "Debug (2)"
-echo "Optimized (3)"
-echo "Tiny (4)"
-read -p "[ PROMPT ] Select from options above " ANS
-
+# --- Select compile flags based on preset ---
 case "$ANS" in
-1)
-
-	echo "[ INFO ] Building TetoRC with option $ANS"
-	OUT="tetorc"
-	time nim c -f -d:release "$DEFINE" -d:strip "$VERB" --threads:on --opt:speed --app:console --passC:"$CFLAGS" --passL:"$CFLAGS" -o:"$OUT" "$TETORC" && echo \
-	"[ INFO ] TetoRC has been compiled!"
-	;;
-
-2)
-
-	echo "[ INFO ] Building TetoRC with option $ANS"
-	OUT="tetorc-debug"
-	time nim c -f -d:debug "$DEFINE" "$VERB" --app:console --passC:"$DEBUG_CFLAGS" --passL:"$DEBUG_CFLAGS" -o:"$OUT" "$TETORC" && echo \
-	"[ INFO ] TetoRC has been compiled!"
-	;;
-
-3)
-
-	echo "[ INFO ] Building TetoRC with option $ANS"
-	OUT="tetorc-optimized"
-	time nim c -f -d:release -d:optimized "$DEFINE" -d:strip "$VERB" --threads:on --opt:speed --app:console --passC:"$OPT_CFLAGS" --passL:"$OPT_CFLAGS" -o:"$OUT" "$TETORC" && echo \
-	"[ INFO ] TetoRC has been compiled!"
-	;;
-
-4)
-
-	echo "[ INFO ] Building TetoRC with option $ANS"
-	OUT="tetorc-tiny"
-	time nim c -f -d:release -d:tiny "$DEFINE" -d:strip "$VERB" --threads:on --opt:size --app:console --passC:"$SMALL_CFLAGS" --passL:"$SMALL_CFLAGS" -o:"$OUT" "$TETORC" && echo \
-	"[ INFO ] TetoRC has been compiled!"
-	;;
-	
-*)
-
-	echo "[ INFO ] Incorrect choice! Aborting..."
-	exit 1
-	;;
+1) CSET="$CFLAGS" DEFINE_FLAGS="-d:release -d:strip --threads:on --opt:speed --app:console" ;;
+2) CSET="$DEBUG_CFLAGS" DEFINE_FLAGS="-d:debug --app:console" ;; 
+3) CSET="$OPT_CFLAGS" DEFINE_FLAGS="-d:release -d:optimized -d:strip --threads:on --opt:speed --app:console" ;; 
+4) CSET="$SMALL_CFLAGS" DEFINE_FLAGS="-d:release -d:tiny -d:strip --threads:on --opt:size --app:console" ;;
+*) echo "[ ERROR ] Invalid preset!"; exit 1 ;;
 esac
+
+# --- Execute builds ---
+case "$STAGE" in
+1)
+    build "$TETORC_S1" "tetorc-stage1" 
+    ;;
+2)
+    build "$TETORC_S2" "tetorc-stage2" 
+    ;;
+both)
+    build "$TETORC_S1" "tetorc-stage1" 
+    build "$TETORC_S2" "tetorc-stage2" 
+    ;;
+*)
+    echo "[ ERROR ] Invalid stage option!"
+    exit 1
+    ;;
+esac
+
+echo "[ INFO ] Build process completed."
