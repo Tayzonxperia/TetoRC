@@ -78,8 +78,8 @@ This visually isolates code blocks and enhances vertical readability — especia
 
 ## Naming Conventions
 
-| Type | Nim | C | Bash | Example |
-|------|-----|---|-------|----------|
+| Type | Nim | C | Bash | Example (Nim) |
+|------|-----|---|-------|---------------|
 | Mutable variable | `var_name` | `var_name` | `var_name` | `var result` |
 | Immutable variable | `LET_NAME` | `const LET_NAME` | `readonly LET_NAME` | `let LET_NAME=42` |
 | Constant | `CONSTNAME` | `#define CONSTNAME` | N/A | `CONSTNAME = 64` |
