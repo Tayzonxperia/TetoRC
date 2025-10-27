@@ -13,11 +13,11 @@ import "codegen", "../fs/mount", "msg"
 {.compile: "../init/shutdown.c".}
 
 
+
 #### Main function ####
 #######################
-
 proc mainfunc() =
-      if not defined(initramfs):
+      if not defined(initramfs): # If not in initramfs, assume rootfs mounted
             if uname(addr u) == 0:
                   stdout.write("\n", BRIGHT_WHITE, "TetoRC version ", RESET, BRIGHT_MAGENTA, TETVER, RESET, BRIGHT_WHITE, " starting up ", RESET, BOLD, BRIGHT_CYAN, cast[cstring](addr u.sysname[0]), RESET, BOLD," - ", RESET, BOLD, BRIGHT_RED, cast[cstring](addr u.release[0]), RESET, "\n \n")
             elif defined Linux:
@@ -25,9 +25,10 @@ proc mainfunc() =
             else:
                   stdout.write("\n", "TetoRC version ", TETVER, " starting up (unable to get osname + utsname) \n \n")
 
-            ## Mount everything      
+            ## Mount most things     
             discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
             discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
+            #discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT))
             discard mounter(RUN_SRC, RUN_PATH, RUN_FS, RUN_FS_MNT, cast[pointer](RUN_FS_OPT))
             discard mounter(TMP_SRC, TMP_PATH, TMP_FS, TMP_FS_MNT, cast[pointer](TMP_FS_OPT))
 
@@ -43,7 +44,7 @@ proc mainfunc() =
             else:
                   stdout.write("\n", "TetoRC version ", TETVER, " starting up (unable to get osname + utsname) \n \n")
 
-            ## Mount everything      
+            ## Mount basic paths    
             discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
             discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
             discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT))
@@ -52,8 +53,8 @@ proc mainfunc() =
 
 #### Start of bootstrap ####
 ############################
-stdout.write(BOLD, "###############################################################################", RESET, "\n \n")
-stdout.write(BOLD, "TetoRC Stage ", STAGE, " is loading ...", RESET, "\n \n")
+stdout.write(BOLD, "###############################################################################", RESET, "\n ")
+stdout.write(BOLD, "TetoRC Stage ", STAGE, " is loading .....................", RESET, "\n ")
 stdout.write(BOLD, "###############################################################################", RESET, "\n \n \n")
 mainfunc()
 

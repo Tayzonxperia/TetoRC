@@ -1,5 +1,8 @@
 Build/*tetorc*
+*tetorc*
 nimcache
+t*mp
+non-pub
 
 *.o
 *.pat
@@ -11,3 +14,4 @@ nimcache
 *.log
 *.AppImage
 version.*
+*log*

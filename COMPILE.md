@@ -22,7 +22,8 @@ Use this for testing, development, or diagnosing runtime behavior.
 3. Optimized
 
 Builds a system-optimized binary tuned for performance on your hardware.
-Note: compile times will increase due to higher optimization levels.
+Note: compile times will increase due to higher optimization levels, and 
+may break on some machines.
 
 4. Tiny
 

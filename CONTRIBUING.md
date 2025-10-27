@@ -1,13 +1,13 @@
-# TetoRC Coding Style Guide
+# TetOS Coding Style Guide
 
 **Version 1.1 — Authored by Taylor (Tayzonxperia)**  
-*Designed for Nim, C, and Bash — maximum readability, logical rhythm, and aesthetic structure.*
+*Designed for Nim, Bash, C and INI — maximum readability, logical rhythm, and aesthetic structure.*
 
 ---
 
 ## Purpose
 
-This document defines the **TetoRC Coding Standard** — a unified style philosophy ensuring clarity, predictability, and aesthetic consistency across all code written for the TetoRC ecosystem.
+This document defines the **TetOS Coding Standard** — a unified style philosophy ensuring clarity, predictability, and aesthetic consistency across all code written for the TetOS ecosystem.
 
 TetoRC code should look intentional, read like structured architecture, and communicate purpose visually.
 
@@ -94,7 +94,7 @@ This visually isolates code blocks and enhances vertical readability — especia
 
 ## Comment Hierarchy (Universal System)
 
-TetoRC code uses a hierarchical comment system consistent across Nim, Bash, and C.
+TetoRC code uses a hierarchical comment system consistent across Nim, Bash, C and INI.
 
 | Purpose | Nim | Bash | C | INI |
 |----------|-----|------|--|------|

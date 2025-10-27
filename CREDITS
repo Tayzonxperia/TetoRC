@@ -13,6 +13,8 @@ Core Developer and leader of the TetOS project:
 
 Inspired by:
 - Kasane Teto (https://kasaneteto.jp) <3
+- Jamie Paige (JamieP) for the song "Machine Love"
+- nwp8861 for the song "Song of the Eared Robot"
 - OpenRC (https://github.com/OpenRC/openrc)
 - sysvinit (https://savannah.nongnu.org/projects/sysvinit)
 - BusyBox (https://busybox.net)
@@ -22,4 +24,4 @@ Special Thanks:
 - Linus Torvalds and all the Linux maintainers for providing the Linux kernel (https://www.kernel.org)
 - Sparkles-Laurel for LAMENT, which powers Yoshiwara LAMENT (https://github.com/Sparkles-Laurel and https://getconfigured.org)
 - thedistromaker for tinyinit , which powers Tinit (https://github.com/thedistromaker)
-- nwp8861 for techo, which powers TASCII (https://github.com/nwp8861)
+- nwp8861 for techo, which inspired TASCII (https://github.com/nwp8861)

@@ -29,11 +29,42 @@ echo "2) Debug"
 echo "3) Optimized"
 echo "4) Tiny"
 read -p "[ PROMPT ] Select preset: " ANS
+echo ""
+
+# --- Test function ---
+test() {
+    local TESTING="$1"
+    echo "[ TEST ] Testing for $TESTING..."
+    
+    TESTLOC=$(which "$TESTING") && echo "[ TEST ] $TESTING found at $TESTLOC"
+
+    if [[ "$TESTING" == "gcc" || "$TESTING" == "nim" || "$TESTING" == "lua" || "$TESTING" == "python" ]]; then
+        echo "[ TEST ] Preforming compiler check for $TESTING..."
+        if ./Tests/check.sh "$TESTING"; then
+            echo "[ OK ] $TESTING was validated successfully!"
+            echo ""
+        else
+            echo "[ FAIL ] $TESTING was not validated successfully!"
+            if [[ "$TESTING" == "gcc" || "$TESTING" == "nim" ]]; then
+                echo "[ ERROR ] $TESTING is a core dependency! Canceling build..."
+                exit 1
+            fi
+            echo ""
+        fi
+
+    else
+        echo "[ TEST ] Unknown test target: $TESTING"
+    fi
+}
 
 # --- Build function ---
 build() {
     local SRC="$1"
     local OUT="$2"
+    for dep in nim gcc lua python; do
+        test "$dep"
+    done
+    echo ""
     echo "[ BUILD ] Compiling $OUT..."
     time nim c -f $DEFINE_FLAGS "$DEFINE" "$VERB" \
         --passC:"$CSET" --passL:"$CSET" \
@@ -46,7 +77,7 @@ build() {
 case "$ANS" in
 1) CSET="$CFLAGS" DEFINE_FLAGS="-d:release -d:strip --threads:on --opt:speed --app:console" ;;
 2) CSET="$DEBUG_CFLAGS" DEFINE_FLAGS="-d:debug --app:console" ;; 
-3) CSET="$OPT_CFLAGS" DEFINE_FLAGS="-d:release -d:optimized -d:strip --threads:on --opt:speed --app:console" ;; 
+3) CSET="$OPT_CFLAGS" DEFINE_FLAGS="-d:release -d:danger -d:gcoff --mm:none -d:optimized -d:strip --threads:on --opt:speed --app:console" ;; 
 4) CSET="$SMALL_CFLAGS" DEFINE_FLAGS="-d:release -d:tiny -d:strip --threads:on --opt:size --app:console" ;;
 *) echo "[ ERROR ] Invalid preset!"; exit 1 ;;
 esac

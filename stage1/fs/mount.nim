@@ -1,7 +1,11 @@
 ######## File for handling mounting
 import posix, strutils
 
-import "../../include/dposix", "../core/codegen", "../core/msg"
+## Include imports
+import "../../include/dposix"
+
+## Project imports
+import "../core/codegen", "../core/msg"
 
 
 ## Mountchecker
@@ -18,7 +22,6 @@ proc mountcheck*(path: cstring): mountcheckRESULT =
            
 
 ## Mounter
-
 proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): cint {.inline.}  =
       var src: cstring
       var tgt: cstring
@@ -54,7 +57,6 @@ proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): ci
 
 
 ## Umounter
-
 proc umounter*[T](target: T): cint {.inline.}  =
       var tgt: cstring
       when T is string:

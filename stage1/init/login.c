@@ -16,6 +16,6 @@ void start_bash(void) {
 
                 int status;
                 waitpid(pid, &status, 0);
-                printf("\n Shell killed! Respawning new shell... \n");
+                printf("\n Shell killed! Respawning new shell... \n"); // Restart bash whenever it dies
         }
 }

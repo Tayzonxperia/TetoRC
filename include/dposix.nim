@@ -57,7 +57,6 @@ proc unlink*(pathname: cstring): cint {.cdecl, importc: "unlink".}
 var st*:Stat
 
 ## Execve
-#proc execve*(path: cstring, argv: ptr cstringArray, envp: ptr cstringArray): cint {.importc: "execve", header: "<unistd.h>", cdecl.}
 proc execve*(path: cstring, argv: ptr ptr cchar, envp: ptr ptr cchar): cint {.importc: "execve", header: "<unistd.h>", cdecl.}
 
 ## Kill

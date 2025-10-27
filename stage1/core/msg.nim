@@ -1,10 +1,11 @@
 ######## Message and console functions
 import posix
 
+## Project imports
 import "codegen" 
 
 
-## Function that writes to display
+#### Function that writes to display
 proc tmesg*[T](ret: T, successmsg: string, errormsg: string = "") {.inline.} = 
       when T is int:
             ret = ret.cint
