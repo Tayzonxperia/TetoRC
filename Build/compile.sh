@@ -24,6 +24,9 @@ elif [[ "$LIBSTATE" == "shared" ]]; then
     LIBSET=" --shared"
 fi
 
+read -p "[ PROMPT ] Compress with UPX? " UPX
+if [ -z "$UPX" ]; then UPX="n"; fi
+
 read -p "[ PROMPT ] Any defines? (e.g. -d:debug) " DEFINE
 if [ -z "$DEFINE" ]; then DEFINE="-d:null"; fi
 echo "[ INFO ] You have defined '$DEFINE'"
@@ -99,17 +102,30 @@ esac
 case "$STAGE" in
 0)
 	build "$TETORC_S0" "tetorc-stage0"
+    if [[ "$UPX" == "y" ]]; then
+    upx -9 -v tetorc-stage0
+    fi
 	;;
 1)
     build "$TETORC_S1" "tetorc-stage1" 
+    if [[ "$UPX" == "y" ]]; then
+    upx -9 -v tetorc-stage1
+    fi
     ;;
 2)
-    build "$TETORC_S2" "tetorc-stage2" 
+    build "$TETORC_S2" "tetorc-stage2"
+    if [[ "$UPX" == "y" ]]; then
+    upx -9 -v tetorc-stage2
+    fi
     ;;
 all)
 	build "$TETORC_S0" "tetorc-stage0"
     build "$TETORC_S1" "tetorc-stage1" 
     build "$TETORC_S2" "tetorc-stage2" 
+    if [[ "$UPX" == "y" ]]; then
+    echo "" && echo "[ COMPRESS ] Compessing TetoRC with UPX..." && echo ""
+    upx -9 -v tetorc-stage*
+    fi
     ;;
 *)
     echo "[ ERROR ] Invalid stage option!"
