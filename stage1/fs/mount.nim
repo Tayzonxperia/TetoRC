@@ -5,7 +5,7 @@ import posix, strutils
 import "../../include/dposix"
 
 ## Project imports
-import "../core/codegen", "../core/msg"
+import "../core/codegen", "../core/msg", "vfs"
 
 
 ## Mountchecker
@@ -41,10 +41,12 @@ proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): ci
             if ret == 0 and (mountck in {Mounted, MountNotCheckable}):
                   let successmsg = ("Mounted " & $src & " (" & $fs & ") at " & $tgt)
                   tmesg(ret, successmsg)
+                  discard vfsinfo(tgt)
                   success = true
             elif ret == 0 and (mountck in {NotMounted, MountNotCheckable}):
                   let errormsg = ("Mounted " & $src & " (" & $fs & ") at " & $tgt & "\n[ CRITWARN ] Mount could not be checked, could not confirm mountpoint \n")
                   tmesg(ret, errormsg)
+                  discard vfsinfo(tgt)
                   success = true
             else:
                   let errormsg = ("Failed to mount " & $src & " at " & $tgt & " (" & $fs & ")")
@@ -60,13 +62,9 @@ proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): ci
 proc umounter*[T](target: T): cint {.inline.}  =
       var tgt: cstring
       when T is string:
-            src = cstring(source)
             tgt = cstring(target)
-            fs = cstring(fstype)
       elif T is cstring:
-            src = source
             tgt = target
-            fs = fstype
       var success = false
       while not success:
             let ret = umount(tgt)

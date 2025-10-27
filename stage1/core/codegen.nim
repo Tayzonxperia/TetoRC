@@ -10,10 +10,11 @@ import "../../include/dposix"
 ####################################
 
 ## Stage define
-const STAGE*:cint = 1
+const STAGE* = "1"
 
 ## Escape codes
 const
+    CLEAR* = "\e[2J\e[H"
     RESET* = "\x1b[0m"
     BOLD* = "\x1b[1m"
     RED* =  "\x1b[31m"
@@ -70,6 +71,19 @@ const
 type mountcheckRESULT* = enum
     Mounted, NotMounted, MountNotCheckable
 
+type
+  VFSInfo* = object
+    path*: string           # path probed
+    fsid*: uint64          # filesystem ID
+    blockSize*: c_ulong     # fundamental block size
+    fragmentSize*: c_ulong  # fragment size
+    totalBlocks*: c_ulong   # total number of blocks
+    freeBlocks*: c_ulong    # free blocks
+    availBlocks*: c_ulong   # blocks available to non-root
+    totalInodes*: c_ulong   # total inodes
+    freeInodes*: c_ulong    # free inodes
+    availInodes*: c_ulong   # inodes available to non-root
+    mountReadOnly*: bool    # true if FS is read-only
 
 #### Compiler codegenerator ####
 ################################
@@ -89,4 +103,4 @@ static:
 #### Computed constants and lets ####
 #####################################
 
-const TETVER* = "pre-release 00"
+const TETVER*:string = "beta (1.2.5-rc2)"
