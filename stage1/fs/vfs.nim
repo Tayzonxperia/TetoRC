@@ -17,7 +17,7 @@ proc vfsinfo*[T](path: T): VFSInfo =
     var stat: Statvfs
     let ret = statvfs(cpath, stat)
     if ret != 0:
-        tmesg(ret, "Failed to statvfs: " & $cpath)
+        tmesg(ret, "VFS: Failed to stat " & $cpath)
 
     result = VFSInfo(
         path: $cpath,
@@ -33,6 +33,6 @@ proc vfsinfo*[T](path: T): VFSInfo =
         mountReadOnly: (stat.f_flag and ST_RDONLY.culong) != 0
         )
 
-    tmesg(0, "VFS: " & $cpath & " mounted with fsid " &
+    tmesg(0, "VFS: " & $cpath & " mounted with FSID " &
         $result.fsid & ", ro=" & $result.mountReadOnly)
    

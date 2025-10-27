@@ -26,7 +26,7 @@ proc mainfunc() =
       else:
             stdout.write("\n", "TetoRC version ", TETVER, " starting up (unable to get osname + utsname) \n \n")
 
-      ## Mount most things     
+      ## Mount most things and display vfsinfo     
       discard vfsinfo("/")
       discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
       discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
@@ -41,11 +41,8 @@ proc mainfunc() =
 
 
 
-
 #### Start of bootstrap ####
 ############################
-stdout.write(BOLD, "###############################################################################", RESET, "\n ")
-stdout.write
 stdout.write(BOLD, "###############################################################################", RESET, "\n \n \n")
 mainfunc()
 

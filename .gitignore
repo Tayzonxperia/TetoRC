@@ -13,5 +13,4 @@ non-pub
 *.stub
 *.log
 *.AppImage
-version.*
 *log*
