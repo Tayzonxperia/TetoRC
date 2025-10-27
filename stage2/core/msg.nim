@@ -1,16 +1,27 @@
-import posix, os # Imports
+######## Message and console functions
+import posix, strutils
 
-import "codegen" 
+## Project imports
+import "../../include/universal"
 
 
-## Function that writes to display
+#### Function that writes to display
 proc tmesg*[T](ret: T, successmsg: string, errormsg: string = "") {.inline.} = 
+      var varret: cint
       when T is int:
-            ret = ret.cint
+            varret = ret.cint
       elif T is cint:
-            discard ret
-      if ret == 0:
+            varret = ret
+      else:
+            varret = 0
+      if varret == 0:
             stdout.write("[ ", BRIGHT_GREEN, "OK", RESET, " ] ", BOLD, successmsg, RESET, "\n")
       else:
             stderr.write("[ ", BRIGHT_RED, "ERR", RESET, " ] ", BOLD, errormsg, RESET, "[Error code:", BOLD, ret, RESET, "] \n")
 
+
+proc centerText*(text: string) =
+  let width = 80 # std tty width
+  let textLen = text.len
+  let padding = max(0, (width - textLen) div 2)
+  echo repeat(' ', padding) & text

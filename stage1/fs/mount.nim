@@ -2,14 +2,16 @@
 import posix, strutils
 
 ## Include imports
-import "../../include/dposix"
+import "../../include/universal", "../../include/dposix"
 
 ## Project imports
-import "../core/codegen", "../core/msg", "vfs"
+import "vfs"
+import "../core/codegen", "../core/msg"
+
 
 
 ## Mountchecker
-proc mountcheck*(path: cstring): mountcheckRESULT =
+proc mountcheck*(path: cstring): mountcheckRESULT {.inline.} =
       if $path in FAILPATH: 
             stderr.write("[ ", BRIGHT_YELLOW, "WARN", RESET, " ] ", BOLD, WHITE, path, RESET, BOLD, " cannot be checked", RESET, "\n")
             return MountNotCheckable

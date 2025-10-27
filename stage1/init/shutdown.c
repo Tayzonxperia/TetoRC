@@ -1,4 +1,5 @@
 //////// TetoRC init login file
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <unistd.h>
 #include <sys/reboot.h>

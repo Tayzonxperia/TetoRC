@@ -1,15 +1,17 @@
 ######## File for handling mounting
-import posix, os, strutils
+import posix, strutils
 
-import "../../include/dposix", "../core/codegen", "../core/runtime", "../core/msg"
+## Include imports
+import "../../include/universal", "../../include/dposix"
+
+## Project imports
+import "vfs"
+import "../core/codegen", "../core/msg"
+
 
 
 ## Mountchecker
-
-type mountcheckRESULT* = enum
-    Mounted, NotMounted, MountNotCheckable
-
-proc mountcheck*(path: cstring): mountcheckRESULT =
+proc mountcheck*(path: cstring): mountcheckRESULT {.inline.} =
       if $path in FAILPATH: 
             stderr.write("[ ", BRIGHT_YELLOW, "WARN", RESET, " ] ", BOLD, WHITE, path, RESET, BOLD, " cannot be checked", RESET, "\n")
             return MountNotCheckable
@@ -22,7 +24,6 @@ proc mountcheck*(path: cstring): mountcheckRESULT =
            
 
 ## Mounter
-
 proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): cint {.inline.}  =
       var src: cstring
       var tgt: cstring
@@ -42,10 +43,12 @@ proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): ci
             if ret == 0 and (mountck in {Mounted, MountNotCheckable}):
                   let successmsg = ("Mounted " & $src & " (" & $fs & ") at " & $tgt)
                   tmesg(ret, successmsg)
+                  discard vfsinfo(tgt)
                   success = true
             elif ret == 0 and (mountck in {NotMounted, MountNotCheckable}):
                   let errormsg = ("Mounted " & $src & " (" & $fs & ") at " & $tgt & "\n[ CRITWARN ] Mount could not be checked, could not confirm mountpoint \n")
                   tmesg(ret, errormsg)
+                  discard vfsinfo(tgt)
                   success = true
             else:
                   let errormsg = ("Failed to mount " & $src & " at " & $tgt & " (" & $fs & ")")
@@ -58,17 +61,12 @@ proc mounter*[T](source: T, target: T, fstype: T, flag: uint, data: pointer): ci
 
 
 ## Umounter
-
 proc umounter*[T](target: T): cint {.inline.}  =
       var tgt: cstring
       when T is string:
-            src = cstring(source)
             tgt = cstring(target)
-            fs = cstring(fstype)
       elif T is cstring:
-            src = source
             tgt = target
-            fs = fstype
       var success = false
       while not success:
             let ret = umount(tgt)

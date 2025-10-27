@@ -2,7 +2,7 @@
 import posix, strutils
 
 ## Project imports
-import "codegen" 
+import "../../include/universal"
 
 
 #### Function that writes to display

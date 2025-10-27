@@ -2,14 +2,15 @@
 import posix
 
 ## Include imports
-import "../../include/dposix", "../../include/dcustom"
+import "../../include/universal", "../../include/dposix", "../../include/dcustom"
 
 ## Project imports
-import "codegen", "../fs/vfs", "../fs/mount", msg
+import "codegen", "msg"
+import "../fs/vfs", "../fs/mount"
 
 ## Project FFI imports
 {.compile: "../init/init.c".}
-{.compile: "../init/login.c".}
+{.compile: "../init/exec.c".}
 {.compile: "../init/shutdown.c".}
 
 
