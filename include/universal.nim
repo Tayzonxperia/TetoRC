@@ -1,5 +1,5 @@
 ######## TetoRC constant universal file
-import posix
+import posix, os
 
 ## Include imports
 import "dposix"
@@ -31,6 +31,20 @@ const
 
 ## Mountchecker termination paths
 const FAILPATH* = @["/", "/dev", "/proc"]
+
+## Directory paths
+const TETODIRS* =  [
+    "/etc/tetorc",
+    "/tmp/tetorc",
+    "/run/tetorc",
+    "/usr/lib/tetorc",
+    "/usr/libexec/tetorc",
+    "/usr/libexec/tetorc/modules"
+]
+
+## Socket path
+const PIPEINPATH* = "/run/tetorc/ipcpipe.in"
+const PIPEOUTPATH* = "/run/tetorc/ipcpipe.out"
 
 ## Safe mount options
 const

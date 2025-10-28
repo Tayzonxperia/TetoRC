@@ -1,0 +1,39 @@
+TetoRC NOTICE
+=============
+
+This software is licensed under the GNU General Public License version 2 (GPL-2.0-only).
+----------------------------------------------------------------------------------------
+
+Depiction of Kasane Teto:
+-------------------------
+Kasane Teto © TWINDRILL  
+Licensed under the Piapro Character License (PCL).  
+See: https://kasaneteto.jp/guideline/ctu.html (Applied mutatis mutandis)
+TetoRC is a fan-made project inspired by Kasane Teto.  
+TetoRC is licensed under GPL-2.0-only.
+The character Kasane Teto is not covered by this license.
+Taylor (Wakana Kisarau) and maintainers/contributers have copyright
+of the source code of TetoRC only.
+
+Vendor
+------
+Some portions of TetoRC incorporate or are derived from third-party software
+distributed under permissive licenses. Attribution and license details for
+these components are listed below.
+
+- Component: techo
+- Modifed Component: TASCII
+  Original Author: nwp8861
+  Source: https://github.com/nwp8861/techo
+  License: MIT-0 (https://opensource.org/license/MIT-0)
+  Copyright: (C) 2024 nwp8861
+
+Full license texts for all included third-party software are available in:
+  Vendor/<modifed component>/<component>/LICENSE
+and summarized in:
+  CREDITS
+and full original README.md or equivilent are avavilable in:
+  Vendor/<modifed component>/<component>/README.md (or equivilent)
+
+All modifications and additions by Taylor (Wakana Kisarazu) and contributors are under:
+  SPDX-License-Identifier: GPL-2.0-only

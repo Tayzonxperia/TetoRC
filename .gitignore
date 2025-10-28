@@ -1,4 +1,5 @@
 Build/*tetorc*
+Build/Temp/*
 *tetorc*
 nimcache
 t*mp

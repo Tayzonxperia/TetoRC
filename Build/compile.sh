@@ -2,13 +2,42 @@
 
 CFLAGS="-O2 -pipe -ffreestanding -s"
 DEBUG_CFLAGS="-g -O0 -pipe -ffreestanding"
-OPT_CFLAGS="-march=native -mtune=native -O3 -flto -pipe -fno-exceptions -fno-rtti -fdata-sections -ffunction-sections -ffreestanding -s"
-SMALL_CFLAGS="-march=native -mtune=native -Os -flto -pipe -s"
+OPT_CFLAGS="-march=native -mtune=native -O3 -flto -pipe -fno-exceptions -fmerge-all-constants -fno-ident -fno-rtti -fdata-sections -ffunction-sections -ffreestanding -s"
+SMALL_CFLAGS="-march=native -mtune=native -Os -flto -pipe -fmerge-all-constants -fno-ident -s"
 
 TETORC_S0="$(pwd)/../stage0/core/main.nim"
 TETORC_S1="$(pwd)/../stage1/core/main.nim"
 TETORC_S2="$(pwd)/../stage2/core/main.nim"
 
+NIMCACHELOC="$(pwd)/Temp"
+NIMCACHE="--nimcache:$NIMCACHELOC"
+CFGDIR="$(pwd)/config"
+
+echo "[ PRE-INFO ] Nimcache @ $NIMCACHELOC"
+if [ -f "$CFGDIR/compileonly.nimflag" ]; then
+	echo "[ PRE-INFO ] Compliling only! (Cleaning $NIMCACHELOC)"
+	CLEANTMP="Y"
+	MAKENIM="--compileOnly:on"
+elif [ -f "$CFGDIR/nolinking.nimflag" ]; then
+	echo "[ PRE-INFO ] Not linking! (Cleaning $NIMCACHELOC)"
+	CLEANTMP="Y"	
+	MAKENIM="--noLinking:on"
+else
+	echo "[ PRE-INFO ] Standard building procedure!"
+fi
+
+if [[ "$CLEANTMP" == "Y" ]]; then
+	if [ -z $NIMCACHELOC ]; then
+		echo "[ PRE-INFO ] Nimcache is nonexistant. Not cleaning!"
+	else
+		echo "[ PRE-WARN ] Executing "rm -r $NIMCACHELOC"/* !"
+		rm "$NIMCACHELOC"/*
+	fi
+else
+	echo "[ PRE-INFO ] Nimcache cleanse not needed. Not cleaning!"
+fi
+
+echo ""		
 echo "[ INFO ] How would you like to build TetoRC?"
 read -p "[ PROMPT ] Build Stage 0, 1, 2 or all stages? (0/1/2/all): " STAGE
 STAGE=${STAGE,,} # lowercase it
@@ -82,7 +111,7 @@ build() {
     if [[ "$LIBSET" == " --static" ]]; then
         CSET+=$LIBSET
     fi
-    time nim c -f $DEFINE_FLAGS $LIBSTATE "$DEFINE" "$VERB" \
+    time nim c -f $NIMCACHE $MAKENIM $DEFINE_FLAGS $LIBSTATE "$DEFINE" "$VERB" \
         --passC:"$CSET" --passL:"$CSET" \
         -o:"$OUT" "$SRC" \
         && echo "[ OK ] $OUT compiled successfully!" \
@@ -103,18 +132,21 @@ case "$STAGE" in
 0)
 	build "$TETORC_S0" "tetorc-stage0"
     if [[ "$UPX" == "y" ]]; then
+    echo "" && echo "[ COMPRESS ] Compessing TetoRC with UPX..." && echo ""
     upx -9 -v tetorc-stage0
     fi
 	;;
 1)
     build "$TETORC_S1" "tetorc-stage1" 
     if [[ "$UPX" == "y" ]]; then
+    echo "" && echo "[ COMPRESS ] Compessing TetoRC with UPX..." && echo ""
     upx -9 -v tetorc-stage1
     fi
     ;;
 2)
     build "$TETORC_S2" "tetorc-stage2"
     if [[ "$UPX" == "y" ]]; then
+    echo "" && echo "[ COMPRESS ] Compessing TetoRC with UPX..." && echo ""
     upx -9 -v tetorc-stage2
     fi
     ;;

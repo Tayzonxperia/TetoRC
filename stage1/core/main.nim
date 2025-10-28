@@ -1,12 +1,12 @@
 ######## Main TetoRC Stage 1 file
-import posix
+import posix, os
 
 ## Include imports
 import "../../include/universal", "../../include/dposix", "../../include/dcustom"
 
 ## Project imports
 import "codegen", "msg"
-import "../fs/vfs", "../fs/mount"
+import "../fs/vfs", "../fs/mount", "../fs/file"
 
 ## Project FFI imports
 {.compile: "../init/init.c".}
@@ -35,7 +35,9 @@ proc mainfunc() =
       #discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT))
       discard mounter(RUN_SRC, RUN_PATH, RUN_FS, RUN_FS_MNT, cast[pointer](RUN_FS_OPT))
       discard mounter(TMP_SRC, TMP_PATH, TMP_FS, TMP_FS_MNT, cast[pointer](TMP_FS_OPT))
-
+      for dir in TETODIRS:
+            makedir(dir)
+        
 
       stdout.write("\n \n")
       cmain()
