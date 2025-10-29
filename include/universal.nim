@@ -1,5 +1,5 @@
 ######## TetoRC constant universal file
-import posix, os
+import posix
 
 ## Include imports
 import "dposix"
@@ -96,3 +96,14 @@ type
     freeInodes*: c_ulong    # free inodes
     availInodes*: c_ulong   # inodes available to non-root
     mountReadOnly*: bool    # true if FS is read-only
+
+## SYS type
+type
+  SYSspec* = object
+    os*, cc*, linker*, assembler*, hostname*, kernName*, kernRel*, kernVer*: string
+    cpuArch*, cpuVendor*, cpuModel*, cpuCores*, cpuFlags*: string
+    cpuL1d*, cpuL1dSize*, cpuL1dX*: string
+    cpuL1i*, cpuL1iSize*, cpuL1iX*: string
+    cpuL2*, cpuL2Size*, cpuL2X*: string
+    cpuL3*, cpuL3Size*, cpuL3X*: string
+    memTotal*: string
