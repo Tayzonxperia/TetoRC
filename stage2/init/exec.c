@@ -7,7 +7,7 @@
 #include <errno.h>
 #include <string.h>
 #include <sys/wait.h>
-#include "../../include/exec.h"
+#include "../../include/init.h"
 
 
 void start_bash(void) {

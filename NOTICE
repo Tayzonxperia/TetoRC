@@ -22,12 +22,19 @@ distributed under permissive licenses. Attribution and license details for
 these components are listed below.
 
 - Component: techo
-- Modifed Component: TASCII
+- Modified Component: TASCII
   Original Author: nwp8861
   Source: https://github.com/nwp8861/techo
   License: MIT-0 (https://opensource.org/license/MIT-0)
   Copyright: (C) 2024 nwp8861
 
+- Component: hummingbird
+- Modified Component: Birdbrain
+  Original Author: Sweets
+  Source: https://github.com/Sweets/hummingbird
+  License: MIT
+  Copyright: (C) 2019 スーイツ
+  
 Full license texts for all included third-party software are available in:
   Vendor/<modifed component>/<component>/LICENSE
 and summarized in:

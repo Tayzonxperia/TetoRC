@@ -1,7 +1,3 @@
-#pragma once
-
-void shutdown_system(void);
-
 #ifndef SHUTDOWN_H
 #define SHUTDOWN_H
 

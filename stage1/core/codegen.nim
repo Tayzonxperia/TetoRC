@@ -41,8 +41,8 @@ static:
         echo(BRIGHT_WHITE & "---> " & RESET & "Preset: Tiny \n")
 
     
-    when defined(optimized) or defined(tiny):
-        const COMPILETIMESCRIPT = "bash ../../Build/codegen/sysinfo.sh"        
+    when defined(Linux):
+        const COMPILETIMESCRIPT = "bash ../../Build/codegen/sysinfo.sh"   
         proc buildSYSspecification(raw: string): SYSspec {.compileTime.} =
             var sysinfo = initTable[string, string]()
             for line in raw.splitLines():
@@ -78,7 +78,6 @@ static:
                 result.memTotal   = sysinfo.getOrDefault("mem_total", "")
         
         const SYS = buildSYSspecification(staticexec(COMPILETIMESCRIPT))
-
         echo(BOLD & "Determining full system specifications..." & RESET)
         echo(BRIGHT_WHITE & "---> " & RESET & "Host: " & SYS.hostname)  
         echo(BRIGHT_WHITE & "---> " & RESET & "C compiler: " & SYS.cc) 
@@ -102,11 +101,13 @@ static:
         echo(BRIGHT_GREEN & "---> " & RESET & "L2 Cache: " & SYS.cpuL2 & SYS.cpuL2Size & " " & SYS.cpuL2X)
         echo(BRIGHT_GREEN & "---> " & RESET & "L3 Cache: " & SYS.cpuL3 & SYS.cpuL3Size & " " & SYS.cpuL3X)
         echo(BRIGHT_CYAN & "Determining hardware specifications..." & RESET)
-        echo(BRIGHT_GREEN & "---> " & RESET & "RAM: " & SYS.memTotal)    
+        echo(BRIGHT_GREEN & "---> " & RESET & "RAM: " & SYS.memTotal)  
+
+        when defined(optimized) or defined(tiny):
+            echo "DEFINED" # Do something, to come later  
 
     echo(BOLD & " \n Compiling..." & RESET)
       
-    
 
 #### Computed constants and lets ####
 #####################################

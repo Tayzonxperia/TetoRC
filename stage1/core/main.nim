@@ -9,9 +9,10 @@ import "codegen", "msg"
 import "../fs/vfs", "../fs/mount", "../fs/file"
 
 ## Project FFI imports
+{.compile: "../init/birdbrain.c".}
 {.compile: "../init/init.c".}
-{.compile: "../init/exec.c".}
 {.compile: "../init/shutdown.c".}
+{.compile: "../init/signal.c".}
 
 
 
@@ -28,7 +29,7 @@ proc mainfunc() =
             stdout.write("\n", "TetoRC version ", TETVER, " starting up (unable to get osname + utsname) \n \n")
 
       ## Mount most things and display vfsinfo     
-      discard vfsinfo("/")
+      discard vfsinfo("/") # Kimi wa jitsu ni baka dana
       discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
       discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
       #discard umounter(DEV_PATH)
@@ -38,8 +39,17 @@ proc mainfunc() =
       for dir in TETODIRS:
             makedir(dir)
         
-
+      stdout.write(CLEAR)
+      sleep(2000)
+      if hasJPFile():
+            showsplash("テトRC is starting " & $cast[cstring](addr u.sysname[0]) & "...")
+      else:
+            showsplash("TetoRC is starting " & $cast[cstring](addr u.sysname[0]) & "...")
+      sleep(5500)
+      stdout.write(CLEAR)
+      sleep(10)
       stdout.write("\n \n")
+
       cmain()
 
 

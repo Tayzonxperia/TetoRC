@@ -30,4 +30,3 @@ may break on some machines.
 Builds the smallest possible binary by disabling nonessential features.
 Ideal for embedded or minimalist systems.
 
-Example:

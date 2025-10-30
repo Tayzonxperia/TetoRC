@@ -33,18 +33,30 @@ const
 const FAILPATH* = @["/", "/dev", "/proc"]
 
 ## Directory paths
-const TETODIRS* =  [
+const TETODIRS* = [
+    "/kasane",
+    "/kasane/tetorc",
+    "/kasane/tetorc/tbin",
+    "/kasane/tetorc/tlib",
+    "/kasane/tetorc/misc",
+    "/kasane/tetorc/modules",
+    "/kasane/tetorc/misc",
     "/etc/tetorc",
     "/tmp/tetorc",
     "/run/tetorc",
-    "/usr/lib/tetorc",
-    "/usr/libexec/tetorc",
-    "/usr/libexec/tetorc/modules"
+    "/usr/lib/tetorc"
 ]
 
 ## Socket path
 const PIPEINPATH* = "/run/tetorc/ipcpipe.in"
 const PIPEOUTPATH* = "/run/tetorc/ipcpipe.out"
+
+## Font paths
+const JPFONTPATHS* = [
+  "/usr/share/fonts/noto/NotoSansCJK-Regular.ttc",
+  "/usr/share/fonts/opentype/ipafont/ipagp.ttf",
+  "/usr/share/fonts/TTF/SourceHanSansJP-Regular.otf"
+]
 
 ## Safe mount options
 const

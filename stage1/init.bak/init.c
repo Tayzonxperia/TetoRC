@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <unistd.h>
-#include "../../include/init.h"
+#include "../../include/exec.h"
 #include "../../include/shutdown.h"
 
 volatile sig_atomic_t shutdown_requested = 0; 
@@ -27,7 +27,7 @@ int cmain() {
         signal(SIGINT, handle_shtdwn);
         signal(SIGUSR1, handle_reboot);
 
-        start_bash();
+        start_tetorc_s2();
         
         if (reboot_requested)
                 shutdown_sys(1); // Restart and shutdown logic.

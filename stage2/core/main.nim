@@ -1,5 +1,5 @@
 ######## Main TetoRC Stage 2 file
-import posix, os
+import posix, os, osproc
 
 ## Include imports
 import "../../include/universal", "../../include/dposix", "../../include/dcustom"
@@ -19,11 +19,6 @@ import "../ipc/fifo"
 #######################
 proc mainfunc() =
     centerText(BOLD & "TetoRC Stage " & STAGE & " is loading ......" & RESET & "\n")
-
-    createdir("/run/tetorc") 
-    createdir("/tmp/tetorc")
-
-
 
     initfifo(PIPEINPATH, PIPEOUTPATH)
 
