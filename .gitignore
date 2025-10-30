@@ -6,6 +6,7 @@ t*mp
 non-pub
 Tests
 
+*.bak
 *.o
 *.pat
 *.ssh
