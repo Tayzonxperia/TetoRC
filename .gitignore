@@ -5,6 +5,7 @@ nimcache
 t*mp
 non-pub
 Tests
+Unused
 
 *.bak
 *.o
