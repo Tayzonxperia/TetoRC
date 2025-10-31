@@ -1,4 +1,6 @@
-######## File defining custom C, CXX, ASM and JS here
+######## TetoRC C/C++/ASM header file
+
+
 
 ## Main C init function
 proc cmain*() {.importc, cdecl.}

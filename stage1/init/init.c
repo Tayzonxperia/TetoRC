@@ -1,3 +1,4 @@
+//////// TetoRC Stage 1 Birdbrain init file
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,23 +6,25 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <sys/mman.h>
-#include <sys/mount.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-
 #include <sys/reboot.h>
 #include <linux/reboot.h>
 
+// Include imports
 #include "../../include/birdbrain.h"
 #include "../../include/init.h"
 
-static void mount_pseudo_filesystems(void);
+// Function defines
 static void seed_rng_device(void);
 static void set_hostname(void);
 static void disable_three_finger_salute(void);
 
-void boot_system() {
+
+
+void boot_system() 
+{
     execute("/kasane/tetorc/tbin/fs");
 
     set_hostname();
@@ -31,10 +34,16 @@ void boot_system() {
 
     disable_three_finger_salute();
 
-    start_tetorc_s2();
+    execute("/kasane/tetorc/tbin/tty");
+    //start_tetorc_s2(); 
+    /* Disabled for now - Agetty will not work when launched from my test VM 
+       for some reason, root will not login - Think its because my /bin/login 
+       does not link to libpam, i use shadowed passwds */
+                
 }
 
-static void seed_rng_device() {
+static void seed_rng_device() 
+{
     void *seed;
     struct stat status;
     int fd = open("/kasane/tetorc/misc/random.seed", O_RDONLY);
@@ -58,7 +67,8 @@ static void seed_rng_device() {
     munmap(seed, status.st_size);
 }
 
-static void set_hostname() {
+static void set_hostname() 
+{
     struct stat status;
     void *mapped_file = MAP_FAILED;
     char *hostname = "teto";
@@ -83,17 +93,34 @@ static void set_hostname() {
         munmap(mapped_file, status.st_size);
 }
 
-static void disable_three_finger_salute() {
+static void disable_three_finger_salute() 
+{
     // Pressing Ctrl+Alt+Del before this call will cause a system reboot.
     reboot(LINUX_REBOOT_CMD_CAD_OFF);
 }
 
-void drop_to_emergency_shell() {
-    fputs("Init failed, dropping into emergency root shell.", stderr);
-    execute("/bin/bash");
+void drop_to_emergency_shell() 
+{
+    fputs("Init failed, dropping into emergency root shell \n", stderr);
+    while (1) {
+        pid_t pid = fork();
+        if (pid == 0) {
+            execl("/bin/bash", "tetobash", NULL);
+            fprintf(stderr, "Failed to exec emergency bash shell: %s\n \n", strerror(errno));
+            _exit(1);
+        } else if (pid > 0) {
+            int status;
+            waitpid(pid, &status, 0);
+            fprintf(stderr, "Shell exited (status %d), restarting...\n \n", WEXITSTATUS(status));
+        } else {
+            fprintf(stderr, "fork() failed: %s\n \n", strerror(errno));
+            sleep(1);
+        }
+    }
 }
 
-void start_tetorc_s2(void) {
+void start_tetorc_s2(void) 
+{
     const char *mtarget = "/sbin/tetorc-stage2"; 
     char *const margv[] = { (char *)mtarget, NULL };
     char *const menvp[] = { NULL };

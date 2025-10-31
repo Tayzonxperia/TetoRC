@@ -1,8 +1,9 @@
-######## Message and console functions
+######## TetoRC Stage 1 console functions
 import posix, strutils, osproc, os
 
 ## Project imports
 import "../../include/universal"
+
 
 
 #### Function that writes to display
@@ -29,8 +30,12 @@ proc centerText*(text: string) =
 
 #### Shows splash
 proc showsplash*(text: string) =
-      let cmd = ("python3 /kasane/tetorc/modules/tascii.py -2 -l " & text)
-      discard execcmd(cmd)
+      if fileexists("/kasane/tetorc/modules/tascii.py"):
+            let cmd = ("python3 /kasane/tetorc/modules/tascii.py -2 -l " & text)
+            discard execcmd(cmd)
+      else:
+            centerText(text)
+
       
 ## JP fontfinder
 proc hasJPFile*(): bool =

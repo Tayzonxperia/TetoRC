@@ -1,5 +1,7 @@
-######## File containing all POSIX defs
+######## TetoRC POSIX header file
 import posix
+
+
 
 ## Mount
 proc mount*(source: cstring, target: cstring, fstype: cstring, flag: uint, data: pointer): cint {.cdecl, importc: "mount".}

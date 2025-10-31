@@ -1,4 +1,4 @@
-######## TetoRC Stage 1 statvfs file
+######## TetoRC Stage 1 VFS interface file
 import posix
 
 ## Include ompots

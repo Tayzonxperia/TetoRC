@@ -1,3 +1,4 @@
+//////// TetoRC Stage 1 Birdbrain signal file
 #include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,16 +9,21 @@
 #include <sys/reboot.h>
 #include <linux/reboot.h>
 
+// Include imports
 #include "../../include/signal.h"
 #include "../../include/shutdown.h"
 
-int (*signal_map[SIGUNUSED])(void) = {
+
+
+int (*signal_map[SIGUNUSED])(void) = 
+{
     [SIGINT] = restart_machine,
     [SIGUSR1] = poweroff_machine,
     [SIGCHLD] = reap_children
 };
 
-void handle_signal(int received) {
+void handle_signal(int received) 
+{
     int flag;
 
     if (!signal_map[received] || (flag = signal_map[received]()) < 0)
@@ -27,7 +33,8 @@ void handle_signal(int received) {
     reboot(flag);
 }
 
-void install_signal_handler() {
+void install_signal_handler() 
+{
     struct sigaction signal_handler;
     signal_handler.sa_flags = 0;
     sigemptyset(&signal_handler.sa_mask);
@@ -40,16 +47,20 @@ void install_signal_handler() {
     }
 }
 
-int restart_machine() {
+int restart_machine() 
+{
     return LINUX_REBOOT_CMD_RESTART;
 }
 
-int poweroff_machine() {
+int poweroff_machine() 
+{
+    shutdown_system();
     return LINUX_REBOOT_CMD_POWER_OFF;
 }
 
 
-int reap_children() {
+int reap_children() 
+{
     while(waitpid(-1, NULL, WNOHANG) > 0);
     return -1;
 }

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+. /kasane/tetorc/tlib/rc.lib
+
+setup_hotplug(){
+
+    if command -v mdev >/dev/null; then
+        mdev -s
+        mdev -df & mdev_pid=$!
+
+        [ -x /bin/dmsetup ] && dmsetup mknodes
+    fi
+}
+
+
+setup_hotplug
+
+ip link set up dev lo
+
+for file in /etc/tetorc/*.boot; do
+    [ -f "$file" ] && . "$file"
+done

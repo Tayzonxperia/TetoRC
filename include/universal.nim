@@ -1,4 +1,4 @@
-######## TetoRC constant universal file
+######## TetoRC universal include file
 import posix
 
 ## Include imports
@@ -38,13 +38,13 @@ const TETODIRS* = [
     "/kasane/tetorc",
     "/kasane/tetorc/tbin",
     "/kasane/tetorc/tlib",
+    "/kasane/tetorc/security",
     "/kasane/tetorc/misc",
     "/kasane/tetorc/modules",
-    "/kasane/tetorc/misc",
+    "/usr/lib/tetorc",
     "/etc/tetorc",
     "/tmp/tetorc",
-    "/run/tetorc",
-    "/usr/lib/tetorc"
+    "/run/tetorc"
 ]
 
 ## Socket path
@@ -92,7 +92,7 @@ const
 
 ## Result type
 type mountcheckRESULT* = enum
-    Mounted, NotMounted, MountNotCheckable
+  Mounted, NotMounted, MountNotCheckable
 
 ## VFS type
 type
@@ -118,4 +118,10 @@ type
     cpuL1i*, cpuL1iSize*, cpuL1iX*: string
     cpuL2*, cpuL2Size*, cpuL2X*: string
     cpuL3*, cpuL3Size*, cpuL3X*: string
-    memTotal*: string
+    memTotal*, rootDisk*, rootDisksize*: string
+    hasNvidia*, nvidiaModinfo*: string
+
+## HASH type
+type
+  HASHspec* = object
+    hash*, hasher*: string

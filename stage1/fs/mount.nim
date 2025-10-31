@@ -1,4 +1,4 @@
-######## File for handling mounting
+######## TetoRC Stage 1 mounter file
 import posix, strutils
 
 ## Include imports

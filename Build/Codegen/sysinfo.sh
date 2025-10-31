@@ -9,7 +9,9 @@ ld=$(ld --version | awk '{print $1,$2, $5}' || echo "null")
 as=$(as --version | awk '{print $1,$2,$5}' || echo "null")
 hostname=$(uname -n || echo "null")
 
-kern_name=$(uname -s || echo "UNIX based")
+proc_ver=$(cat /proc/version || echo "null")
+
+kern_name=$(uname -s || echo "null")
 kern_rel=$(uname -r || echo "null")
 kern_ver=$(uname -v || echo "null")
 
@@ -36,7 +38,13 @@ l3_SIZE=$(lscpu 2>/dev/null | awk '/L3 cache:/ {print $4}' || echo "0")
 l3_X=$(lscpu 2>/dev/null | awk '/L3 cache:/ {print $5}' || echo "0")
 
 microcode=$(grep -m1 '^microcode' /proc/cpuinfo | cut -d: -f2 | xargs || echo "null")
+
 mem_total=$(awk '/MemTotal/ {print int($2/1024)"MB"}' /proc/meminfo || echo "0")
+
+root_disk=$(lsscsi 2>/dev/null | grep "/dev/sda" | awk '{print $3,$4,$5}' || echo "null")
+root_disksize=$(lsblk -rd 2>/dev/null | grep "sda" | awk '{print $4}' || echo "0")
+
+nvidia_modinfo=$(lsmod 2>/dev/null | grep "nvidia" | awk '{print $1}' | tr '\n' ' ' || echo "null")
 
 # Output key=value lines
 echo "os=$os"
@@ -44,6 +52,7 @@ echo "cc=$cc"
 echo "linker=$ld"
 echo "assembler=$as"
 echo "hostname=$hostname"
+echo "proc_ver=$proc_ver"
 echo "kern_name=$kern_name"
 echo "kern_rel=$kern_rel"
 echo "kern_ver=$kern_ver"
@@ -65,4 +74,12 @@ echo "cpu_cache_l3=$l3"
 echo "cpu_cache_l3_SIZE=$l3_SIZE"
 echo "cpu_cache_l3_X=$l3_X)"
 echo "mem_total=$mem_total"
-
+echo "root_disk=$root_disk"
+echo "root_disksize=$root_disksize"
+if lsmod 2>/dev/null | grep -q -m1 "nvidia"; then
+    echo "has_nvidia=true"
+    echo "nvidia_modinfo=$nvidia_modinfo"
+else
+    echo "has_nvidia=false"
+    echo "nvidia_modinfo=null"
+fi

@@ -42,7 +42,7 @@ static:
 
     
     when defined(Linux):
-        const COMPILETIMESCRIPT = "bash ../../Build/codegen/sysinfo.sh"        
+        const COMPILETIMESCRIPT = "bash ../../Build/Codegen/sysinfo.sh"        
         proc buildSYSspecification(raw: string): SYSspec {.compileTime.} =
             var sysinfo = initTable[string, string]()
             for line in raw.splitLines():

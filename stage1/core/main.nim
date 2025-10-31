@@ -7,6 +7,7 @@ import "../../include/universal", "../../include/dposix", "../../include/dcustom
 ## Project imports
 import "codegen", "msg"
 import "../fs/vfs", "../fs/mount", "../fs/file"
+import "../security/hash"
 
 ## Project FFI imports
 {.compile: "../init/birdbrain.c".}
@@ -28,19 +29,20 @@ proc mainfunc() =
       else:
             stdout.write("\n", "TetoRC version ", TETVER, " starting up (unable to get osname + utsname) \n \n")
 
+      writehash()
       ## Mount most things and display vfsinfo     
       discard vfsinfo("/") # Kimi wa jitsu ni baka dana
       discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
       discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
-      #discard umounter(DEV_PATH)
-      #discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT))
+      #discard umounter(DEV_PATH) # Gets automounted by almost every modern kernel/initramfs
+      #discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT)) 
       discard mounter(RUN_SRC, RUN_PATH, RUN_FS, RUN_FS_MNT, cast[pointer](RUN_FS_OPT))
       discard mounter(TMP_SRC, TMP_PATH, TMP_FS, TMP_FS_MNT, cast[pointer](TMP_FS_OPT))
       for dir in TETODIRS:
             makedir(dir)
         
-      stdout.write(CLEAR)
       sleep(2000)
+      stdout.write(CLEAR)
       if hasJPFile():
             showsplash("テトRC is starting " & $cast[cstring](addr u.sysname[0]) & "...")
       else:

@@ -1,6 +1,10 @@
+//////// TetoRC Birdbrain signal header file
 #pragma once
 
+// Header includes
 #include <signal.h>
+
+
 
 #ifndef SIGUNUSED
 #define SIGUNUSED SIGSYS

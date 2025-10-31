@@ -1,0 +1,13 @@
+#!/bin/sh
+
+. /kasane/tetorc/tlib/rc.lib
+
+rm -r /tmp/*
+dd count=1 bs=512 if=/dev/random of=/kasane/tetorc/misc/random.seed
+
+
+swapoff -a
+umount -a -l
+umount -a
+
+mount -o remount,ro /

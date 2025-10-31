@@ -332,7 +332,7 @@ if align == 'R':
       img[imgSeq][i] = '.' * int(mWidth / 2) + img[imgSeq][i];
   else:
     # 画面が狭すぎるときは、文字列のみ出力して終了する
-    print('warning: too narrow screen', file=sys.stderr)
+    print('Warning: Screen is too narrow', file=sys.stderr)
     exit()
 
 #---------------------------------------------

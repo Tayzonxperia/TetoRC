@@ -1,4 +1,4 @@
-######## TetoRC Stage 1 file ops handler
+######## TetoRC Stage 1 file ops handler file
 import posix, os
 
 ## Include imports
@@ -6,6 +6,7 @@ import "../../include/universal"
 
 ## Project imports
 import "../core/msg"
+
 
 
 #### Directory creator ####
