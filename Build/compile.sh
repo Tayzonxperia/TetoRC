@@ -1,9 +1,11 @@
 #!/bin/bash
 
+clear 
+
 CFLAGS="-O2 -pipe -ffreestanding -s"
 DEBUG_CFLAGS="-g -O0 -pipe -ffreestanding"
-OPT_CFLAGS="-march=native -mtune=native -O3 -flto -pipe -fno-exceptions -fmerge-all-constants -fno-ident -fno-rtti -fdata-sections -ffunction-sections -ffreestanding -s"
-SMALL_CFLAGS="-march=native -mtune=native -Os -flto -pipe -fmerge-all-constants -fno-ident -s"
+OPT_CFLAGS="-march=native -mtune=native -O3 -flto -pipe -fno-exceptions -fmerge-all-constants -fno-strict-aliasing -fno-ident -fno-rtti -fdata-sections -ffunction-sections -ffreestanding -s"
+SMALL_CFLAGS="-march=native -mtune=native -Os -flto -pipe -fmerge-all-constants -fno-strict-aliasing -fno-ident -s"
 
 TETORC_S0="$(pwd)/../stage0/core/main.nim"
 TETORC_S1="$(pwd)/../stage1/core/main.nim"
@@ -37,7 +39,16 @@ else
 	echo "[ PRE-INFO ] Nimcache cleanse not needed. Not cleaning!"
 fi
 
-echo ""		
+echo ""	
+if [ -f "$CFGDIR/gcmemoff.nimflag" ]; then
+	echo "[ PRE-INFO ] Compiler warning off!"
+	GCMEM="--warning:GcMem:off"
+fi	
+if [ -f "$CFGDIR/unusedimportoff.nimflag" ]; then
+	echo "[ PRE-INFO ] Compiler hints disabled"
+	UNUSEDIMPORT="--warning:UnusedImport:off"
+fi	
+
 echo "[ INFO ] How would you like to build TetoRC?"
 read -p "[ PROMPT ] Build Stage 0, 1, 2 or all stages? (0/1/2/all): " STAGE
 STAGE=${STAGE,,} # lowercase it
@@ -111,7 +122,7 @@ build() {
     if [[ "$LIBSET" == " --static" ]]; then
         CSET+=$LIBSET
     fi
-    time nim c -f $NIMCACHE $MAKENIM $DEFINE_FLAGS $LIBSTATE "$DEFINE" "$VERB" \
+    time nim c -f $NIMCACHE $MAKENIM $GCMEM $UNUSEDIMPORT $DEFINE_FLAGS $LIBSTATE "$DEFINE" "$VERB" \
         --passC:"$CSET" --passL:"$CSET" \
         -o:"$OUT" "$SRC" \
         && echo "[ OK ] $OUT compiled successfully!" \

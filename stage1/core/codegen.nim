@@ -42,13 +42,15 @@ static:
     else:
         echo(BRIGHT_MAGENTA & "===> " & RESET & "Hash: " & BOLD & HASH.hash & RESET & " (" & HASH.hasher & ")")
 
-    echo(BOLD & "\n Checking safety measures..." & RESET)
+    echo("\n" & BOLD & "Checking safety measures..." & RESET)
     when defined(danger):
         echo(BRIGHT_YELLOW & "---# " & RESET & YELLOW & "Warning: " & RESET & "Danger mode enabled! Runtime checking off!")
     when defined(gcoff):
         echo(BRIGHT_RED & "---! " & RESET & RED & "Warning: " & RESET & "Garbage collecter disabled! Segfaults possible!")
     when defined(panic):
         echo(BRIGHT_RED & "---! " & RESET & RED & "Warning: " & RESET & "Panics enabled! TetoRC will fail on most errors! Not recomended for non-developers!")
+    when not defined(danger) and not defined(gcoff) and not defined(panic):
+        echo(BRIGHT_GREEN & "---> " & RESET & GREEN & "Safety measures enabled!" & RESET)
     
     echo("\n" & BOLD & "Determining if we are linking staticlly or shared..." & RESET) 
     when defined(static):
@@ -101,6 +103,9 @@ proc buildSYSspecification(raw: string): SYSspec {.compileTime.} =
             result.memTotal      = sysinfo.getOrDefault("mem_total", "")
             result.rootDisk      = sysinfo.getOrDefault("root_disk", "")
             result.rootDisksize  = sysinfo.getOrDefault("root_disksize", "")
+            result.rootDiskpart  = sysinfo.getOrDefault("root_diskpart", "")
+            result.rootDiskuuid  = sysinfo.getOrDefault("root_diskuuid", "") 
+            result.rootDiskfs    = sysinfo.getOrDefault("root_diskfs", "") 
             result.hasNvidia     = sysinfo.getOrDefault("has_nvidia", "")
             result.nvidiaModinfo = sysinfo.getOrDefault("nvidia_modinfo", "")
 
@@ -144,8 +149,12 @@ static:
         echo(BRIGHT_CYAN & "Determining hardware specifications..." & RESET)
         if SYS.rootDisksize >= "1.0T":
             echo(BRIGHT_GREEN & "---> " & RESET & "Root Disk: " & SYS.rootDisk & " (Size: " & SYS.rootDisksize & ")") 
+            echo(BRIGHT_GREEN & "---> " & RESET & "Root Disk partition: " & SYS.rootDiskpart & " (" & SYS.rootDiskfs & ") (UUID: " & SYS.rootDiskuuid & ")") 
+
         else:
             echo(BRIGHT_YELLOW & "---> " & RESET & "Root Disk: " & SYS.rootDisk & " (Size: " & SYS.rootDisksize & ")")
+            echo(BRIGHT_YELLOW & "---> " & RESET & "Root Disk partition: " & SYS.rootDiskpart & " (" & SYS.rootDiskfs & ") (UUID: " & SYS.rootDiskuuid & ")") 
+
         echo(BRIGHT_GREEN & "---> " & RESET & "RAM: " & SYS.memTotal)
         
         

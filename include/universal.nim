@@ -118,7 +118,7 @@ type
     cpuL1i*, cpuL1iSize*, cpuL1iX*: string
     cpuL2*, cpuL2Size*, cpuL2X*: string
     cpuL3*, cpuL3Size*, cpuL3X*: string
-    memTotal*, rootDisk*, rootDisksize*: string
+    memTotal*, rootDisk*, rootDisksize*, rootDiskpart*, rootDiskuuid*, rootDiskfs*: string
     hasNvidia*, nvidiaModinfo*: string
 
 ## HASH type
