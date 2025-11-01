@@ -2,7 +2,6 @@
 # Simple sysinfo as key=val
 
 
-
 os=$(uname -o || echo "UNIX based")
 cc=$(cc --version | awk '{print $2,$3}' || echo "null")
 ld=$(ld --version | awk '{print $1,$2, $5}' || echo "null")
@@ -14,6 +13,8 @@ proc_ver=$(cat /proc/version || echo "null")
 kern_name=$(uname -s || echo "null")
 kern_rel=$(uname -r || echo "null")
 kern_ver=$(uname -v || echo "null")
+
+nvidia_modinfo=$(lsmod 2>/dev/null | grep "nvidia" | awk '{print $1}' | tr '\n' ' ' || echo "null")
 
 arch=$(uname -m || echo "null")
 vendor=$(grep -m1 '^vendor_id' /proc/cpuinfo | cut -d: -f2 | xargs || echo "null")
@@ -41,13 +42,18 @@ microcode=$(grep -m1 '^microcode' /proc/cpuinfo | cut -d: -f2 | xargs || echo "n
 
 mem_total=$(awk '/MemTotal/ {print int($2/1024)"MB"}' /proc/meminfo || echo "0")
 
+board_name=$(cat /sys/class/dmi/id/board_name || echo "null")
+board_manufacturer=$(cat /sys/class/dmi/id/sys_vendor || echo "null")
+product_name=$(cat /sys/class/dmi/id/product_name || echo "null")
+bios_vendor=$(cat /sys/class/dmi/id/bios_vendor || echo "null")
+bios_version=$(cat /sys/class/dmi/id/bios_version || echo "null")
+[ -d /sys/firmware/efi ] && bios_type="UEFI" || bios_type="Legacy"
+
 root_disk=$(lsscsi 2>/dev/null | grep "/dev/sda" | awk '{print $3,$4,$5}' || echo "null")
 root_disksize=$(lsblk -rd 2>/dev/null | grep "sda" | awk '{print $4}' || echo "0")
 root_diskpart=$(blkid 2>/dev/null | grep -m1 "root" | awk '{print $1}' | tr ':' ' ' || echo "null")
 root_diskuuid=$(blkid 2>/dev/null | grep -m1 "root" | awk '{print $3}' | tr '"UUID="' ' ' || echo "null")
 root_diskfs=$(blkid 2>/dev/null | grep -m1 "root" | awk '{print $5}' | tr '"TYPE="' ' ' || echo "null")
-
-nvidia_modinfo=$(lsmod 2>/dev/null | grep "nvidia" | awk '{print $1}' | tr '\n' ' ' || echo "null")
 
 # Output key=value lines
 echo "os=$os"
@@ -59,9 +65,17 @@ echo "proc_ver=$proc_ver"
 echo "kern_name=$kern_name"
 echo "kern_rel=$kern_rel"
 echo "kern_ver=$kern_ver"
+if lsmod 2>/dev/null | grep -q -m1 "nvidia"; then
+    echo "has_nvidia=true"
+    echo "nvidia_modinfo=$nvidia_modinfo"
+else
+    echo "has_nvidia=false"
+    echo "nvidia_modinfo=null"
+fi
 echo "cpu_arch=$arch"
 echo "cpu_vendor=$vendor"
 echo "cpu_model=$model"
+echo "microcode=$microcode"
 echo "cpu_cores=$cores"
 echo "cpu_flags=$flags"
 echo "cpu_cache_l1d=$l1d"
@@ -77,15 +91,14 @@ echo "cpu_cache_l3=$l3"
 echo "cpu_cache_l3_SIZE=$l3_SIZE"
 echo "cpu_cache_l3_X=$l3_X)"
 echo "mem_total=$mem_total"
+echo "board_name=$board_name"
+echo "board_manufacturer=$board_manufacturer"
+echo "product_name=$product_name"
+echo "bios_vendor=$bios_vendor"
+echo "bios_version=$bios_version"
+echo "bios_type=$bios_type"
 echo "root_disk=$root_disk"
 echo "root_diskpart=$root_diskpart"
 echo "root_disksize=$root_disksize"
 echo "root_diskuuid=$root_diskuuid"
 echo "root_diskfs=$root_diskfs"
-if lsmod 2>/dev/null | grep -q -m1 "nvidia"; then
-    echo "has_nvidia=true"
-    echo "nvidia_modinfo=$nvidia_modinfo"
-else
-    echo "has_nvidia=false"
-    echo "nvidia_modinfo=null"
-fi
