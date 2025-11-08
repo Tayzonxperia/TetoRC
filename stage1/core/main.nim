@@ -33,11 +33,9 @@ proc mainfunc() =
       ## Mount most things and display vfsinfo     
       discard vfsinfo("/") # Kimi wa jitsu ni baka dana
       discard mounter(PROC_SRC, PROC_PATH, PROC_FS, PROC_FS_MNT, cast[pointer](PROC_FS_OPT))
-      discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT))
-      #discard umounter(DEV_PATH) # Gets automounted by almost every modern kernel/initramfs
-      #discard mounter(DEV_SRC, DEV_PATH, DEV_FS, DEV_FS_MNT, cast[pointer](DEV_FS_OPT)) 
-      discard mounter(RUN_SRC, RUN_PATH, RUN_FS, RUN_FS_MNT, cast[pointer](RUN_FS_OPT))
-      discard mounter(TMP_SRC, TMP_PATH, TMP_FS, TMP_FS_MNT, cast[pointer](TMP_FS_OPT))
+      discard mounter(SYS_SRC, SYS_PATH, SYS_FS, SYS_FS_MNT, cast[pointer](SYS_FS_OPT)) # These are tricky --- if they are already
+      discard mounter(RUN_SRC, RUN_PATH, RUN_FS, RUN_FS_MNT, cast[pointer](RUN_FS_OPT)) # mounted, say - by a initramfs, it spazes out
+      discard mounter(TMP_SRC, TMP_PATH, TMP_FS, TMP_FS_MNT, cast[pointer](TMP_FS_OPT)) # so we have upgraded mounter() to have better mnt checks
       for dir in TETODIRS:
             makedir(dir)
         

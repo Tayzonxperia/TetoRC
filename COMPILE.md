@@ -7,7 +7,7 @@ This script provides an interactive prompt that lets you choose how to compile T
 
 Build Profiles
 
-The Nim compiler supports build-time definitions (--define: flags) that let you toggle features or optimize the binary for different use cases.
+The Nim compiler supports build-time definitions (-d:define flags) that let you toggle features or optimize the binary for different use cases.
 The build script presents four preset configurations:
 
 1. Standard

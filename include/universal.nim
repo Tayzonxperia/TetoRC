@@ -118,7 +118,7 @@ type
     cpuL1d*, cpuL1dSize*, cpuL1dX*: string
     cpuL1i*, cpuL1iSize*, cpuL1iX*: string
     cpuL2*, cpuL2Size*, cpuL2X*: string
-    cpuL3*, cpuL3Size*, cpuL3X*: string
+    cpuL3*, cpuL3Size*, cpuL3X*: string 
     boardName*, boardManufacturer*, productName*, biosVendor*, biosVersion*, biosType*: string
     memTotal*, rootDisk*, rootDisksize*, rootDiskpart*, rootDiskuuid*, rootDiskfs*: string
 
