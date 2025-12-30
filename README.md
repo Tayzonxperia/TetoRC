@@ -1,113 +1,47 @@
-🧠 TetoRC — A Fast, Modern, Nim-Based Init System
+# TetoRC – Rapid, Flexible Init System
 
-TetoRC is a lightning-fast, stable, and modular init system written primarily in Nim — a powerful high-level language that compiles directly to optimized C.
+> Kimi wa jitsu ni baka dana
 
-Unlike traditional init systems written entirely in C, TetoRC takes advantage of Nim’s expressive syntax, meta-programming, and compile-time optimizations to deliver high performance with low overhead, while still being clean, readable, and extensible.
+---
 
-TetoRC is also multi-stage, split into 2 (and optionally 3) stages to improve redundancy.
+## Overview
 
-⚙️ Philosophy
+TetoRC is a **rapid, flexible init system** written in **Nim**, designed for **performance and ease of use**.  
+It aims to demonstrate that modern languages can handle low-level system tasks while keeping source code **readable** and **maintainable**.
+Some C is used, but we plan to fully migrate to Nim soon, once we can port it.
 
-TetoRC was built to prove that speed and elegance can coexist.
-It powers the TetOS project — a Linux distribution currently in development — and aims to demonstrate that a hybrid, multi-language approach can rival traditional monolithic init systems like SysV, OpenRC, or systemd.
+---
 
-Key goals:
+## Status
 
-Performance: Compiles to optimized C with minimal runtime overhead.
+- **Multiple stages for redundancy** –> planned but **not yet implemented**.  
+- **Heavy beta** –> not expected to work reliably. This is currently a **one-woman project :3**.  
+- Still exploring **Compile-Time Execution (CTE)** for maximum flexibility and speed, this will also allow extreme optimization in future.  
 
-Reliability: Built around stable and well-understood POSIX semantics.
+---
 
-Flexibility: Language-agnostic — any Turing-complete language can integrate with it.
+## Install how-to
 
-Hackability: Minimal boilerplate; clean architecture that encourages experimentation.
+- To compile TetoRC, run the **make.nims** script either by running `./make.nims` or `nim e make.nims`
+- Files produced will be in **Build** directory, either *bin* for executables or *lib* for shared libaries 
+- To install TetoRC, you will have to copy it manually, put the libaries in **/usr/lib** and the binaries in **/usr/sbin**
+- If installing as PID1, in a VM *(risky on real hardware currently)*, **symlink /sbin/tetorc-stage1 to /sbin/init**
 
+---
 
-🚀 Why Nim?
+## Goals
 
-Nim bridges the gap between low-level control and high-level expressiveness.
-It generates C, C++, or Objective-C code directly, allowing developers to:
+- Prove that an **init system can be written in a modern language** - *(Fuck you, Rust)*.  
+- Leverage Nim’s **compile-time execution** features and tooling.  
+- Maintain **human-readable, modular source**.  
 
-Write expressive, readable code.
+---
 
-Avoid complex build systems (no makefiles or cmake hell).
+## Notes
 
-Mix in C libraries and system calls using importc pragmas.
+> Meow mrrp nya :3
 
-Use compile-time evaluation (static, const, macros) for maximum efficiency.
-
-Direct use of system calls via importc.
-
-Compile-time metaprogramming (static, macro, const).
-
-Optional garbage collection — or none at all for kernel-level performance.
-
-Rapid prototyping with native binary output and zero interpreter overhead.
-
-This means TetoRC can be developed and prototyped faster than C projects, while achieving similar — or even superior — performance.
-
-
-🧬 Language Agnosticism
-
-While Nim is the backbone, TetoRC welcomes contributions in other languages — including C,C++, Rust, Lua, or even Assembly — as long as they adhere to the project’s modular interface system.
-
-This design allows developers to:
-
-Replace or extend subsystems using different languages.
-
-Integrate external tools or binaries seamlessly.
-
-Prototype new functionality without rewriting the entire core.
-
-And allows for greater development contibutions.
-
-
-⚡ Performance & Efficiency
-
-TetoRC’s design ensures:
-
-Minimal startup time (milliseconds-level on tested systems).
-
-Memory footprint comparable to SysVinit and OpenRC.
-
-Near-zero CPU load during idle states.
-
-Static binary compilation with full control over GC and linking, while also dynamic linked when needed.
-
-Even when running high-level Nim logic, GC can be disabled, and memory management falls back to deterministic stack-based allocation — effectively achieving C-like performance (although not yet supported, Nim allows this at any time, and it will soon be supported).
-
-🧩 Source Layout:
-
-~/Projectroot is where all this is set out.
-
-stage* (* being a number) refers to the binary stage, increasing numbers are more complex
-
-Directory	Purpose
-
-core/ -	Main logic and subsystem.
-
-fs/	- Filesystem operations — mounts, swap, VFS and read/write.
-
-init/ - PID1 signal processing and service management.
-
-ipc/ - Process communication.
-
-include/ - Header and interface definitions for imports.
-
-modules/ - Add-ons that TetoRC can call.
-
-Build/ - Compilation scripts and environment setup.
-
-Documentation/ - Manuals, guides, and developer docs.
-
-
-🌐 Future Goals
-
-Full service supervision (start/stop/restart daemons safely).
-
-Socket-based IPC for high-speed event communication.
-
-REPL-powered dynamic management of services.
-
-Integration with tetoservice for full OS orchestration.
-
-### TetoRC — rewriting the concept of init systems,
+- Because why shouldn’t an init system have personality?  
+- Chaos and cuteness are optional, but encouraged.
+- If you have taken a intrest in this... (next line)
+- You must be a nerd, come on - *TetoRC* - just a transfem's cute little init :3

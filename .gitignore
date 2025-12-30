@@ -1,11 +1,10 @@
-Build/*tetorc*
-Build/Temp/*
+Build/bin/*
+Build/lib/*
+Build/tmp/*
 *tetorc*
 nimcache
-t*mp
 non-pub
-Tests
-Unused
+STYLE.md
 
 *.bak
 *.o
@@ -17,4 +16,4 @@ Unused
 *.stub
 *.log
 *.AppImage
-*log*
+

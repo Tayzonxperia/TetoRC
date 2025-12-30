@@ -1,0 +1,4 @@
+#!/bin/sh
+
+swapoff -a
+kill -s USR1 1
