@@ -1,6 +1,6 @@
 import posix
 
-import "../ct/constants"
+import "../data/constants"
 
 
 ## START ##

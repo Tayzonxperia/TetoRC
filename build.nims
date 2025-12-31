@@ -1,30 +1,29 @@
 #!/usr/bin/env nim
 import posix, strformat
 
-import "ct/constants"
+import "src/data/constants"
+
+
+let cwd = getCurrentDir()
+const PROGRAM = "TetoRC"
+const VERSION = "1.4.1-alpha1"
+let BUILD_DIR = cwd & "/Build"
 
 author = "Wakana Kisarazu"
 packagename = "tetorc"
 description = """TetoRC — A Fast, Modern, Nim-Based Init System
                 
               TetoRC is a lightning-fast, stable, and modular 
-              init system written primarily in Nim — a powerful 
-              high-level language that compiles directly to C"""
-version = "1.4.0-(2)-beta"
+              init system written primarily in Nim"""
+version = VERSION
 backend = "C"
 license = "GPL 2"
 
 mode = ScriptMode.Verbose
 
+
 ## START ##
 ###########
-
-let cwd = getCurrentDir()
-
-const PROGRAM = "TetoRC"
-const VERSION = "1.4.O-alpha1"
-
-let BUILD_DIR = cwd & "/Build"
 
 const 
   CFLAGS: string = "-march=native -mtune=native -O3 " &
@@ -32,7 +31,7 @@ const
                   "-fno-strict-aliasing -fno-ident -fno-rtti " &
                   "-fdata-sections -ffunction-sections"
 
-  LDFLAGS: string = "-Wl,-O3,-flto"
+  LDFLAGS: string = "-Wl,-O3,-flto,-Tbuild.ld,--build-id=none"
 
   DEFINES: string = "--threads:on --opt:speed " &
                     "--debuginfo:off -d:strip " &
@@ -101,7 +100,7 @@ when not defined(Linux) and not defined(amd64) or defined(i368):
   discard posix.sleep(2)
 
 
-logInfo("Preparing to compile " & BOLD & MAGENTA & PROGRAM & RESET & CYAN & VERSION & RESET)
+logInfo("Preparing to compile " & BOLD & MAGENTA & PROGRAM & RESET & " " & CYAN & VERSION & RESET)
 
 for dep in DEPS:
   var depGraph = Dependencies(
@@ -126,14 +125,17 @@ for dep in DEPS:
 logOkay("Dependencies verified!")
 
 
-logInfo("Starting compilation of " & BOLD & MAGENTA & PROGRAM & RESET & BLUE & VERSION & 
+logInfo("Starting compilation of " & BOLD & MAGENTA & PROGRAM & RESET & " " & CYAN & VERSION & 
         RESET & " with Nim: " & NimVersion & " at " & CompileTime & " (" & CompileDate & ")")
 
+###############################################################################################
 
+proc compileLibaries(srcfile, filename, extradefines: string) =
+  if extradefines == "":
+    discard
 
-proc compileLibaries(srcfile, filename: string) =
   let cmd = "nim c -f --out:\"" & BUILD_DIR & "/lib/" & filename & "\"" &
-  " " & DEFINES & " -d:shared --app:lib --passC:\"" & CFLAGS & "\"" & " --passL:\"" &
+  " " & DEFINES & " -d:shared -d:" & extradefines & " --app:lib --passC:\"" & CFLAGS & "\"" & " --passL:\"" &
   LDFLAGS & "\" " & srcfile
 
   try:
@@ -143,9 +145,13 @@ proc compileLibaries(srcfile, filename: string) =
   except CatchableError as e:
     logFail("Error: Compilation of libary " & filename & " failed!\nOutput: " & e.msg); echo("\n")
 
-proc compileBinaries(srcfile, filename: string) =
+
+proc compileBinaries(srcfile, filename, extradefines: string) =
+  if extradefines == "":
+    discard
+
   let cmd = "nim c -f --out:\"" & BUILD_DIR & "/bin/" & filename & "\"" &
-  " " & DEFINES & " -d:shared --app:console --passC:\"" & CFLAGS & "\"" &
+  " " & DEFINES & " -d:shared -d:" & extradefines & " --app:console --passC:\"" & CFLAGS & "\"" &
   " --passL:\"" & LDFLAGS & "\" " & srcfile
 
   try:
@@ -159,5 +165,5 @@ proc compileBinaries(srcfile, filename: string) =
 ## Actually make the fuckin bastards, hell most of
 ## this prep was for nothin but oh well :3
 
-compileLibaries("core/libteto.nim", "libteto.so")
-compileBinaries("stages/stage1/main.nim", "tetorc-stage1.bin")
+compileBinaries("src/tetorc_loader/main.nim", "tetorc-ldr.bin", "tetorc-ldr")
+#compileBinaries("src/tetorc_service.nim", "tetorc-svc.bin", "tetorc-svc")

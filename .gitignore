@@ -1,7 +1,7 @@
 Build/bin/*
 Build/lib/*
 Build/tmp/*
-*tetorc*
+tetorc-*
 nimcache
 non-pub
 STYLE.md

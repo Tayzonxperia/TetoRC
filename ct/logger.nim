@@ -1,7 +1,6 @@
 import posix, strformat, macros
 
-import "codegen"
-
+import "constants"
 
 ## START ##
 ###########

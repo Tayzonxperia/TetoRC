@@ -22,7 +22,7 @@ Some C is used, but we plan to fully migrate to Nim soon, once we can port it.
 
 ## Install how-to
 
-- To compile TetoRC, run the **make.nims** script either by running `./make.nims` or `nim e make.nims`
+- To compile TetoRC, run the **build.nims** script either by running `./build.nims` or `nim e build.nims`
 - Files produced will be in **Build** directory, either *bin* for executables or *lib* for shared libaries 
 - To install TetoRC, you will have to copy it manually, put the libaries in **/usr/lib** and the binaries in **/usr/sbin**
 - If installing as PID1, in a VM *(risky on real hardware currently)*, **symlink /sbin/tetorc-stage1 to /sbin/init**
