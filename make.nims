@@ -10,7 +10,7 @@ description = """TetoRC — A Fast, Modern, Nim-Based Init System
               TetoRC is a lightning-fast, stable, and modular 
               init system written primarily in Nim — a powerful 
               high-level language that compiles directly to C"""
-version = "1.4.0-(2)-beta"
+version = "1.4.0-alpha1" 
 backend = "C"
 license = "GPL 2"
 
