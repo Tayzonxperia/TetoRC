@@ -1,6 +1,6 @@
 import posix, strformat, times
 
-import "../data/constants", "error"
+import "../data/constants"
 
 
 ## START ##

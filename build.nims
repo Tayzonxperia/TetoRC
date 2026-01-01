@@ -6,8 +6,9 @@ import "src/data/constants"
 
 let cwd = getCurrentDir()
 const PROGRAM = "TetoRC"
-const VERSION = "1.4.1-alpha1"
+const VERSION = "1.4.2-alpha1"
 let BUILD_DIR = cwd & "/Build"
+const MODE = static: readFile("compile.mode")
 
 author = "Wakana Kisarazu"
 packagename = "tetorc"
@@ -26,18 +27,72 @@ mode = ScriptMode.Verbose
 ## START ##
 ###########
 
-const 
-  CFLAGS: string = "-march=native -mtune=native -O3 " &
-                  "-flto -pipe -fmerge-all-constants " &
-                  "-fno-strict-aliasing -fno-ident -fno-rtti " &
-                  "-fdata-sections -ffunction-sections"
+type GenLevel = enum
+    GenDebg, GenInfo, GenOkay, GenWarn, GenFail
 
-  LDFLAGS: string = "-Wl,-O3,-flto,-Tbuild.ld,--build-id=none"
+proc logGen(lvl: GenLevel, text: string) =
+    if lvl == GenDebg:
+        echo(fmt"Nim:[{BOLD & CYAN}{lvl}{RESET}] ==> {BRIGHT_CYAN}{text}{RESET}" & "\n")
+    elif lvl == GenInfo:
+        echo(fmt"Nim:[{BOLD & WHITE}{lvl}{RESET}] ==> {BRIGHT_WHITE}{text}{RESET}" & "\n")
+    elif lvl == GenOkay:
+        echo(fmt"Nim:[{BOLD & GREEN}{lvl}{RESET}] ==> {BRIGHT_GREEN}{text}{RESET}" & "\n")
+    elif lvl == GenWarn:
+        echo(fmt"Nim:[{BOLD & YELLOW}{lvl}{RESET}] ==> {BRIGHT_YELLOW}{text}{RESET}" & "\n")
+    elif lvl == GenFail:
+        echo(fmt"Nim:[{BOLD & RED}{lvl}{RESET}] ==> {BRIGHT_RED}{text}{RESET}" & "\n")
 
-  DEFINES: string = "--threads:on --opt:speed " &
-                    "--debuginfo:off -d:strip " &
-                    "-d:lto --maxLoopIterationsVM:9999999999"
 
+template logDebg*(text: string) =
+    if MODE is "debug":
+        logGen(GenDebg, text)
+    else:
+        discard
+
+template logInfo*(text: string) =
+    logGen(GenInfo, text)
+
+template logOkay*(text: string) =
+    logGen(GenOkay, text)
+
+template logWarn*(text: string) =
+    logGen(GenWarn, text)
+
+template logFail*(text: string) =
+    logGen(GenFail, text)
+
+var
+  CFLAGS, LDFLAGS = "-O0"
+  DEFINES = "-d:release"
+
+if MODE == "release":
+  CFLAGS = "-march=native -mtune=native -O3 " &
+              "-flto -pipe -fmerge-all-constants " &
+              "-fno-strict-aliasing -fno-ident -fno-rtti " &
+              "-fno-asynchronous-unwind-tables " &
+              "-fno-unwind-tables -ffunction-sections " &
+              "-fdata-sections -s"
+
+  LDFLAGS = "-Wl,-O3,-flto,-Trelease.ld,--gc-sections,--build-id=none"
+
+  DEFINES = "--threads:on --opt:speed " &
+                "-x:off -a:off --debuginfo:off " &
+                "--stackTrace:off --lineTrace:off " &
+                "-d:strip -d:lto --maxLoopIterationsVM:9999999999"
+elif MODE == "debug":
+  CFLAGS = "-march=x86-64 -mtune=generic -O0 " &
+              "-g -pipe"
+
+  LDFLAGS = "-Wl,-O0,-Tdebug.ld"
+
+  DEFINES = "--threads:on --opt:none " &
+              "-x:on -a:on --debuginfo:on " &
+              "--stackTrace:on --lineTrace:on " &
+              " -d:debug " & "--maxLoopIterationsVM:9999999999"
+else:
+  logFail("""Build type not defined. Please edit/create the compile.mode and enter
+              release or debug depending on your desired build type. Debug build 
+              type is only reccomended for developers"""); quit(1)
 
 type DependencyType = enum 
   Required, Optional
@@ -59,45 +114,11 @@ const DEPS =
   ]
   
 
-type GenLevel = enum
-    GenDebg, GenInfo, GenOkay, GenWarn, GenFail
-
-proc logGen(lvl: GenLevel, text: string) =
-    if lvl == GenDebg:
-        echo(fmt"Nim:[{BOLD & CYAN}{lvl}{RESET}] ==> {BRIGHT_CYAN}{text}{RESET}" & "\n")
-    elif lvl == GenInfo:
-        echo(fmt"Nim:[{BOLD & WHITE}{lvl}{RESET}] ==> {BRIGHT_WHITE}{text}{RESET}" & "\n")
-    elif lvl == GenOkay:
-        echo(fmt"Nim:[{BOLD & GREEN}{lvl}{RESET}] ==> {BRIGHT_GREEN}{text}{RESET}" & "\n")
-    elif lvl == GenWarn:
-        echo(fmt"Nim:[{BOLD & YELLOW}{lvl}{RESET}] ==> {BRIGHT_YELLOW}{text}{RESET}" & "\n")
-    elif lvl == GenFail:
-        echo(fmt"Nim:[{BOLD & RED}{lvl}{RESET}] ==> {BRIGHT_RED}{text}{RESET}" & "\n")
-
-
-template logDebg*(text: string) =
-    when defined(debug):
-        logGen(GenDebg, text)
-    else:
-        discard
-
-template logInfo*(text: string) =
-    logGen(GenInfo, text)
-
-template logOkay*(text: string) =
-    logGen(GenOkay, text)
-
-template logWarn*(text: string) =
-    logGen(GenWarn, text)
-
-template logFail*(text: string) =
-    logGen(GenFail, text)
-
 exec "clear"; logInfo("Checking host system...")
 
 when not defined(Linux) and not defined(amd64) or defined(i368):
   logWarn("""TetoRC system init is not expected to work on or even compile for 
-          any other ABIs than Linux x86_64 --- --- Proceed at your own risk!""")
+              any other ABIs than Linux x86_64 --- --- Proceed at your own risk!""")
   discard posix.sleep(2)
 
 

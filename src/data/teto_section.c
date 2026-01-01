@@ -1,6 +1,6 @@
 #include <stdint.h>
 
-__attribute__((section(".teto"), used))
+__attribute__((section(".teto"), used)) // Custom section to embed stuff :3
 struct teto_section {
     char magic_str[4];
     uint8_t magic_num; 
@@ -14,7 +14,7 @@ struct teto_section {
         .magic_num = 0x04,
         .ver_major = 1,
         .ver_mid = 4,
-        .ver_minor = 1,
+        .ver_minor = 2,
         .rel_tag = {'a','l','p','h','a','1'},
         .reserved = {0},
     };

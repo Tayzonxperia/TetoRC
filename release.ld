@@ -18,9 +18,7 @@ SECTIONS
   /* Place the build-id as close to the ELF headers as possible.  This
      maximises the chance the build-id will be present in core files,
      which GDB can then use to locate the associated debuginfo file.  */
-  .note.gnu.build-id  : { *(.note.gnu.build-id) }
   .interp         : { *(.interp) }
-  .hash           : { *(.hash) }
   .gnu.hash       : { * (.gnu.hash) }
   .dynsym         : { *(.dynsym) }
   .dynstr         : { *(.dynstr) }
@@ -74,10 +72,10 @@ SECTIONS
     /* .gnu.warning sections are handled specially by elf.em.  */
     *(.gnu.warning)
   }
-  .fini           :
+  .fini           : 
   {
     KEEP (*(SORT_NONE(.fini)))
-  }
+  } 
   PROVIDE (__etext = .);
   PROVIDE (_etext = .);
   PROVIDE (etext = .);
@@ -89,8 +87,6 @@ SECTIONS
   . = SEGMENT_START("rodata-segment", ALIGN(CONSTANT (MAXPAGESIZE)) + (. & (CONSTANT (MAXPAGESIZE) - 1)));
   .rodata         : { *(.rodata .rodata.* .gnu.linkonce.r.*) }
   .rodata1        : { *(.rodata1) }
-  .eh_frame_hdr   : { *(.eh_frame_hdr) *(.eh_frame_entry .eh_frame_entry.*) }
-  .eh_frame       : ONLY_IF_RO { KEEP (*(.eh_frame)) *(.eh_frame.*) }
   .sframe         : ONLY_IF_RO { *(.sframe) *(.sframe.*) }
   .gcc_except_table   : ONLY_IF_RO { *(.gcc_except_table .gcc_except_table.*) }
   .gnu_extab   : ONLY_IF_RO { *(.gnu_extab*) }
@@ -100,10 +96,6 @@ SECTIONS
      in the read-only segment and not treated as orphan sections.  The
      current orphan handling algorithm does place note sections after R/O
      data, but this is not guaranteed to always be the case.  */
-  .note.GNU-stack :     { *(.note.GNU-stack) }
-  .note.gnu-property :  { *(.note.gnu-property) }
-  .note.package :       { *(.note.package) }
-  .note.dlopen :        { *(.note.dlopen) }
   /* Start of the Read Write Data region.  */
   /* Adjust the address for the data segment.  We want to adjust up to
      the same address within the page on the next page up.  */
@@ -140,7 +132,7 @@ SECTIONS
     KEEP (*(SORT_BY_INIT_PRIORITY(.fini_array.*) SORT_BY_INIT_PRIORITY(.dtors.*)))
     KEEP (*(.fini_array EXCLUDE_FILE (*crtbegin.o *crtbegin?.o *crtend.o *crtend?.o ) .dtors))
     PROVIDE_HIDDEN (__fini_array_end = .);
-  }
+  } 
   .ctors          :
   {
     /* gcc uses crtbegin.o to find the start of
@@ -221,58 +213,23 @@ SECTIONS
   _end = .;
   PROVIDE (end = .);
   . = DATA_SEGMENT_END (.);
-  /* Start of the Tiny Data region.  */
-  /* Stabs debugging sections.  */
-  .stab          0 : { *(.stab) }
-  .stabstr       0 : { *(.stabstr) }
-  .stab.excl     0 : { *(.stab.excl) }
-  .stab.exclstr  0 : { *(.stab.exclstr) }
-  .stab.index    0 : { *(.stab.index) }
-  .stab.indexstr 0 : { *(.stab.indexstr) }
-  /*.comment 0 (INFO) : { *(.comment); LINKER_VERSION; } */
-  .gnu.build.attributes : { *(.gnu.build.attributes .gnu.build.attributes.*) }
-  /* DWARF debug sections.
-     Symbols in the DWARF debugging sections are relative to the beginning
-     of the section so we begin them at 0.  */
-  /* DWARF 1.  */
-  .debug          0 : { *(.debug) }
-  .line           0 : { *(.line) }
-  /* GNU DWARF 1 extensions.  */
-  .debug_srcinfo  0 : { *(.debug_srcinfo) }
-  .debug_sfnames  0 : { *(.debug_sfnames) }
-  /* DWARF 1.1 and DWARF 2.  */
-  .debug_aranges  0 : { *(.debug_aranges) }
-  .debug_pubnames 0 : { *(.debug_pubnames) }
-  /* DWARF 2.  */
-  .debug_info     0 : { *(.debug_info .gnu.linkonce.wi.*) }
-  .debug_abbrev   0 : { *(.debug_abbrev) }
-  .debug_line     0 : { *(.debug_line .debug_line.* .debug_line_end) }
-  .debug_frame    0 : { *(.debug_frame) }
-  .debug_str      0 : { *(.debug_str) }
-  .debug_loc      0 : { *(.debug_loc) }
-  .debug_macinfo  0 : { *(.debug_macinfo) }
-  /* SGI/MIPS DWARF 2 extensions.  */
-  .debug_weaknames 0 : { *(.debug_weaknames) }
-  .debug_funcnames 0 : { *(.debug_funcnames) }
-  .debug_typenames 0 : { *(.debug_typenames) }
-  .debug_varnames  0 : { *(.debug_varnames) }
-  /* DWARF 3.  */
-  .debug_pubtypes 0 : { *(.debug_pubtypes) }
-  .debug_ranges   0 : { *(.debug_ranges) }
-  /* DWARF 5.  */
-  .debug_addr     0 : { *(.debug_addr) }
-  .debug_line_str 0 : { *(.debug_line_str) }
-  .debug_loclists 0 : { *(.debug_loclists) }
-  .debug_macro    0 : { *(.debug_macro) }
-  .debug_names    0 : { *(.debug_names) }
-  .debug_rnglists 0 : { *(.debug_rnglists) }
-  .debug_str_offsets 0 : { *(.debug_str_offsets) }
-  .debug_sup      0 : { *(.debug_sup) }
-  .gnu.attributes 0 : { KEEP (*(.gnu.attributes)) }
+  /* Start of the Teto Data region.  */
+  .teto :
+  {
+    KEEP(*(.teto))
+  }
 
+  
   /DISCARD/ : {
-    *(.debug.*) 
+    *(.debug)
+    *(.debug.*)
+    *(.eh_frame)
+    *(.eh_frame_hdr) 
+    *(.shstrtab.*)
+    *(.shstrtab)
+    *(.stab.*)
     *(.comment)
+    *(.note)
     *(.note.*)
     *(.gnu.build.attributes)
     *(.gnu_debuglink)
