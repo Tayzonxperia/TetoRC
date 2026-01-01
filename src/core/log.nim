@@ -37,20 +37,40 @@ proc procLog*(msg: string, reason: LogReason, output: File) =
     else:
         stdout.write(fmt"{prefix} {msg} [{timestamp}]" & "\n")
 
-template logInfo*(msg:string) =
-    procLog(msg, Info, stdout)
+template logInfo*[T](msg: T) =
+    when T is string:
+        let conv = msg
+    elif T is cstring:
+        let conv = $msg
+    procLog(conv, Info, stdout)
 
-template logSuccess*(msg: string) =
-    procLog(msg, Success, stdout)
+template logSuccess*[T](msg: T) =
+    when T is string:
+        let conv = msg
+    elif T is cstring:
+        let conv = $msg
+    procLog(conv, Success, stdout)
 
-template logWarn*(msg: string) =
-    procLog(msg, Warn, stdout)
+template logWarn*[T](msg: T) =
+    when T is string:
+        let conv = msg
+    elif T is cstring:
+        let conv = $msg
+    procLog(conv, Warn, stdout)
 
-template logError*(msg: string) =
-    procLog(msg, Error, stderr)
+template logError*[T](msg: T) =
+    when T is string:
+        let conv = msg
+    elif T is cstring:
+        let conv = $msg
+    procLog(conv, Error, stderr)
 
-template logDebug*(msg: string) =
+template logDebug*[T](msg: T) =
+    when T is string:
+        let conv = msg
+    elif T is cstring:
+        let conv = $msg
     when defined debug:
-        procLog(msg, Debug, stdout)
+        procLog(conv, Debug, stdout)
     else:
         discard

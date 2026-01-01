@@ -1,6 +1,6 @@
 import posix, syscall
 
-import "../data/constants"
+import "../data/constants", "../sys/reboot/generic"
 
 
 
@@ -50,7 +50,7 @@ proc initChildHandler(
     info: ptr Siginfo,
     uctx: pointer) 
     {.cdecl, noconv.} =
-    let errormsg: cstring = RED & "Error: " & RESET & "TetoRC waitpid() on child failed"
+    let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - waitpid() on child failed"
     var status: cint
 
     while true:
@@ -68,8 +68,14 @@ proc initSigHandler(
     info: ptr Siginfo,
     uctx: pointer)
     {.cdecl, noconv.} =
-    let errormsg: cstring = RED & "Error: " & RESET & "TetoRC cannot be interrupted\n" & RESET
-    discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
+    case signum
+    of SIGINT:
+        handleShutdown("reboot")
+    of SIGTERM:
+        handleShutdown("shutdown")
+    else:
+        let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - Unknown signal encountered: " & $signum
+        discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
 
 proc initPanicHandler(
     signum: cint,

@@ -1,7 +1,7 @@
 import posix, os
 
 import "../data/constants"
-import "../core/errorhandle", "../core/log"
+import "../core/sighandler", "../core/log"
 
 {.compile: "../data/teto_section.c".}
 

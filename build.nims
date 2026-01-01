@@ -6,7 +6,7 @@ import "src/data/constants"
 
 let cwd = getCurrentDir()
 const PROGRAM = "TetoRC"
-const VERSION = "1.4.2-alpha1"
+const VERSION = "1.4.2-alpha2"
 let BUILD_DIR = cwd & "/Build"
 const MODE = static: readFile("compile.mode")
 
