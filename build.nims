@@ -6,9 +6,9 @@ import "src/data/constants"
 
 let cwd = getCurrentDir()
 const PROGRAM = "TetoRC"
-const VERSION = "1.4.2-alpha2"
+const VERSION = readFile("config/version")
 let BUILD_DIR = cwd & "/Build"
-const MODE = static: readFile("compile.mode")
+const MODE = static: readFile("config/compilemode")
 
 author = "Wakana Kisarazu"
 packagename = "tetorc"
@@ -73,7 +73,7 @@ if MODE == "release":
               "-fno-unwind-tables -ffunction-sections " &
               "-fdata-sections -s"
 
-  LDFLAGS = "-Wl,-O3,-flto,-Trelease.ld,--gc-sections,--build-id=none"
+  LDFLAGS = "-Wl,-O3,-flto,-Tscripts/release.ld,--gc-sections,--build-id=none"
 
   DEFINES = "--threads:on --opt:speed " &
                 "-x:off -a:off --debuginfo:off " &
@@ -83,7 +83,7 @@ elif MODE == "debug":
   CFLAGS = "-march=x86-64 -mtune=generic -O0 " &
               "-g -pipe"
 
-  LDFLAGS = "-Wl,-O0,-Tdebug.ld"
+  LDFLAGS = "-Wl,-O0,-Tscripts/debug.ld"
 
   DEFINES = "--threads:on --opt:none " &
               "-x:on -a:on --debuginfo:on " &
@@ -187,5 +187,5 @@ proc compileBinaries(srcfile, filename, extradefines: string) =
 ## Actually make the fuckin bastards, hell most of
 ## this prep was for nothin but oh well :3
 
-compileBinaries("src/tetorc_loader/main.nim", "tetorc-ldr.bin", "tetorc-ldr")
+compileBinaries("src/tetorc_loader/main.nim", "tetorc-ldr.bin", "loader")
 #compileBinaries("src/tetorc_service.nim", "tetorc-svc.bin", "tetorc-svc")

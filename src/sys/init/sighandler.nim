@@ -1,18 +1,11 @@
 import posix, syscall
 
-import "../data/constants", "../sys/reboot/generic"
+import "../../data/constants", "../power/poweroff"
 
 
 
 ## START ##
 ###########
-
-type Criticallity* = enum
-    Fatal, # Panic (Error)
-    Required, # Fail, halt system (Error)
-    Optional, # Continue degraded (Warn)
-    NotRequired # Warn, log, move on (Warn)
-
 
 type Gregs = array[23, culong]
 
@@ -45,37 +38,39 @@ const REG_NAMES = [
     ("RIP", 16)
 ]
 
-proc initChildHandler(
-    signum: cint,
-    info: ptr Siginfo,
-    uctx: pointer) 
-    {.cdecl, noconv.} =
-    let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - waitpid() on child failed"
-    var status: cint
+when defined(daemon):
+    proc initChildHandler(
+        signum: cint,
+        info: ptr Siginfo,
+        uctx: pointer) 
+        {.cdecl, noconv.} =
+        let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - waitpid() on child failed"
+        var status: cint
 
-    while true:
-        let pid = waitpid(-1, status, WNOHANG)
-        if pid == 0:
-            break
-        elif pid == -1:
-            if errno == ECHILD:
+        while true:
+            let pid = waitpid(-1, status, WNOHANG)
+            if pid == 0:
                 break
-            discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
-            continue
+            elif pid == -1:
+                if errno == ECHILD:
+                    break
+                discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
+                continue
 
-proc initSigHandler(
-    signum: cint,
-    info: ptr Siginfo,
-    uctx: pointer)
-    {.cdecl, noconv.} =
-    case signum
-    of SIGINT:
-        handleShutdown("reboot")
-    of SIGTERM:
-        handleShutdown("shutdown")
-    else:
-        let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - Unknown signal encountered: " & $signum
-        discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
+when defined(daemon):
+    proc initSigHandler(
+        signum: cint,
+        info: ptr Siginfo,
+        uctx: pointer)
+        {.cdecl, noconv.} =
+        case signum
+        of SIGINT:
+            handlePoweroff("reboot")
+        of SIGTERM:
+            handlePoweroff("shutdown")
+        else:
+            let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - Unknown signal encountered: " & $signum
+            discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
 
 proc initPanicHandler(
     signum: cint,
@@ -109,21 +104,28 @@ proc regSigHandler*() =
     var signals: SigSet
     var dud_signals: SigSet
     discard sigfillset(signals)
-    discard sigdelset(signals, SIGCHLD)
-    discard sigdelset(signals, SIGINT)
-    discard sigdelset(signals, SIGTERM)
+    when defined(daemon):
+        discard sigdelset(signals, SIGCHLD)
+        discard sigdelset(signals, SIGINT)
+        discard sigdelset(signals, SIGTERM)
     discard sigdelset(signals, SIGSEGV)
+    discard sigdelset(signals, SIGABRT)
+    discard sigdelset(signals, SIGILL)
+    discard sigdelset(signals, SIGFPE)
+
     discard sigprocmask(SIG_SETMASK, signals, dud_signals)
 
     var sa: Sigaction
     zeroMem(sa.addr, sizeof(sa))
 
-    sa.sa_sigaction = initChildHandler
-    discard sigaction(SIGCHLD, sa, nil)
+    when defined(daemon):
+        sa.sa_sigaction = initChildHandler
+        discard sigaction(SIGCHLD, sa, nil)
 
-    sa.sa_sigaction = initSigHandler
-    discard sigaction(SIGINT, sa, nil)
-    discard sigaction(SIGTERM, sa, nil)
+    when defined(daemon):
+        sa.sa_sigaction = initSigHandler
+        discard sigaction(SIGINT, sa, nil)
+        discard sigaction(SIGTERM, sa, nil)
     
     sa.sa_sigaction = initPanicHandler
     discard sigaction(SIGSEGV, sa, nil)

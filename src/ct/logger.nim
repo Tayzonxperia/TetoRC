@@ -1,6 +1,6 @@
 import posix, strformat, macros
 
-import "constants"
+import "../data/constants"
 
 ## START ##
 ###########

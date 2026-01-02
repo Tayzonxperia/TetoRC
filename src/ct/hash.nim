@@ -10,7 +10,7 @@ import "logger"
 type HASHspec* = object 
     hash*, hasher*: string
 
-const SCRIPT = "bash ../scripts/hash.sh"
+const SCRIPT = "bash ../../scripts/hash.sh"
 
 proc buildHASHspecification(raw: string): HASHspec {.compileTime.} =
     var hashinfo = initTable[string, string]()

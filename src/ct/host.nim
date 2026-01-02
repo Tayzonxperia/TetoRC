@@ -18,7 +18,7 @@ type HOSTspec* = object
     boardName*, boardManufacturer*, productName*, biosVendor*, biosVersion*, biosType*: string
     memTotal*, rootDisk*, rootDisksize*, rootDiskpart*, rootDiskuuid*, rootDiskfs*: string
 
-const SCRIPT = "bash ../scripts/sysinfo.sh"   
+const SCRIPT = "bash ../../scripts/sysinfo.sh"   
 
 proc buildHOSTspecification(raw: string): HOSTspec {.compileTime.} =
     var sysinfo = initTable[string, string]()
