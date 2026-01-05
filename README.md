@@ -8,14 +8,14 @@
 
 TetoRC is a **rapid, flexible init system** written in **Nim**, designed for **performance and ease of use**.  
 It aims to demonstrate that modern languages can handle low-level system tasks while keeping source code **readable** and **maintainable**.
-Some C is used, but we plan to fully migrate to Nim soon, once we can port it.
+It also aims to be **simple**, yet **functional** -> Meaning it can handle a few things, handle them well, with minimal effort.
 
 ---
 
 ## Status
 
 - **Multiple stages for redundancy** –> planned but **not yet implemented**.  
-- **Heavy beta** –> not expected to work reliably. This is currently a **one-woman project :3**.  
+- **Heavy alpha** –> not expected to work reliably. This is currently a **one-woman project :3**.  
 - Still exploring **Compile-Time Execution (CTE)** for maximum flexibility and speed, this will also allow extreme optimization in future.  
 
 ---

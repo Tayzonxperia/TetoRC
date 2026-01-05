@@ -1,9 +1,10 @@
 import posix, strformat, macros
 
-import "../data/constants"
+import "../util/escape_codes"
 
 ## START ##
 ###########
+
 
 
 type CTlevel = enum

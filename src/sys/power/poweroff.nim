@@ -1,6 +1,6 @@
 import posix, os, syscall
 
-import "data", "../../util/output"
+import "data", "../../util/fancy_output"
 
 
 ## START ##

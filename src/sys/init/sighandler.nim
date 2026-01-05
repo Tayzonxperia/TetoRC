@@ -1,11 +1,16 @@
 import posix, syscall
 
-import "../../data/constants", "../power/poweroff"
+import "../power/poweroff"
+import "../../util/safe_output", "../../util/escape_codes"
 
-
+when not defined(debug):
+    {.push optimization:speed, checks:off, warnings:off.}
+    # Use these regardless of what is defined, apart from debug
 
 ## START ##
 ###########
+
+
 
 type Gregs = array[23, culong]
 
@@ -38,13 +43,14 @@ const REG_NAMES = [
     ("RIP", 16)
 ]
 
+
 when defined(daemon):
     proc initChildHandler(
         signum: cint,
-        info: ptr Siginfo,
-        uctx: pointer) 
-        {.cdecl, noconv.} =
-        let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - waitpid() on child failed"
+        info: nil,
+        uctx: nil) 
+        {.cdecl, noconv, inline.} =
+        # inline this, its called many times
         var status: cint
 
         while true:
@@ -54,14 +60,14 @@ when defined(daemon):
             elif pid == -1:
                 if errno == ECHILD:
                     break
-                discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
+                safePrint(Print, "%s(Error)%s TetoRC - waitpid() failed on child: %d", RED, RESET, pid)
                 continue
 
 when defined(daemon):
     proc initSigHandler(
         signum: cint,
-        info: ptr Siginfo,
-        uctx: pointer)
+        info: nil,
+        uctx: nil)
         {.cdecl, noconv.} =
         case signum
         of SIGINT:
@@ -69,8 +75,7 @@ when defined(daemon):
         of SIGTERM:
             handlePoweroff("shutdown")
         else:
-            let errormsg: cstring = RED & "Error: " & RESET & "TetoRC - Unknown signal encountered: " & $signum
-            discard syscall(WRITE, STDERR_FILENO, errormsg, errormsg.len)
+            safePrint(Print, "%s(Error)%s TetoRC - Unknown signal encountered: %d", RED, RESET, signum)
 
 proc initPanicHandler(
     signum: cint,
@@ -81,32 +86,39 @@ proc initPanicHandler(
     let ctx = cast[ptr UContext](uctx)
     let g = ctx.mcontext.gregs 
 
-    let panicmsg_start: cstring = BOLD & "\nStack Trace: "
-    discard syscall(WRITE, STDOUT_FILENO, panicmsg_start, panicmsg_start.len)
-
-    let trace: cstring = cstring(getStackTrace() & "<TASK>\n")
-    discard syscall(WRITE, STDOUT_FILENO, trace, trace.len)
+    let trace: cstring = getStackTrace()
+    safePrint(Trace, "%sStack trace: %s<TASK>\n", BOLD, trace)
 
     for (reg, idx) in REG_NAMES:
         when not defined debug:
                 if idx >= 8:
-                    stderr.write(reg & ": ", $g[idx] & "\n")
+                    safePrint(Print, "%s:  %s\n", reg, cstring($g[idx])) 
         else:
-            stderr.write(reg & ": ", $g[idx] & "\n")
+            safePrint(Print, "%s:  %s\n", reg, cstring($g[idx])) 
 
+    #[ Making g[idx] a string is a dirty hack, I can't figure out how to
+       make %d handle large numbers, so fuck it, we use a (c)string ]#
 
-    let panicmsg_end: cstring = "</TASK>\n" & RESET
-    discard syscall(WRITE, STDOUT_FILENO, panicmsg_end, panicmsg_end.len)
+    safePrint(Print, "</TASK>%s\n", RESET)
     discard sleep(1); sync()
+    discard syscall(EXIT, 1) #[ Force exit now to avoid
+    half-state returns and corrupt states, auto-reboot 
+    will be added later ]#
 
 
-proc regSigHandler*() =
+proc regSigHandler*()
+    =
     var signals: SigSet
     var dud_signals: SigSet
+
+    #[ Another dirty hack, again if
+       someone can fix this, i would
+       love to know ]#
+
     discard sigfillset(signals)
     when defined(daemon):
         discard sigdelset(signals, SIGCHLD)
-        discard sigdelset(signals, SIGINT)
+        discard sigdelset(signals, SIGINT)        
         discard sigdelset(signals, SIGTERM)
     discard sigdelset(signals, SIGSEGV)
     discard sigdelset(signals, SIGABRT)
@@ -132,3 +144,6 @@ proc regSigHandler*() =
     discard sigaction(SIGABRT, sa, nil)
     discard sigaction(SIGILL, sa, nil)
     discard sigaction(SIGFPE, sa, nil)
+
+when not defined(debug):
+    {.pop.}

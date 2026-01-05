@@ -1,6 +1,6 @@
 import posix, os
 
-import "../../util/output"
+import "../../util/fancy_output"
 
 
 ## START ##

@@ -1,7 +1,6 @@
 #!/usr/bin/env nim
 import posix, strformat
 
-import "src/data/constants"
 
 
 let cwd = getCurrentDir()
@@ -23,6 +22,24 @@ license = "GPL 2"
 
 mode = ScriptMode.Verbose
 
+const
+    CLEAR*           = "\e[2J\e[H"
+    RESET*           = "\x1b[0m"
+    BOLD*            = "\x1b[1m"
+    RED*             =  "\x1b[31m"
+    GREEN*           = "\x1b[32m"
+    YELLOW*          = "\x1b[33m"
+    BLUE*            = "\x1b[34m"
+    MAGENTA*         = "\x1b[35m"
+    CYAN*            = "\x1b[36m"
+    WHITE*           = "\x1b[37m"
+    BRIGHT_RED*      = "\x1b[91m"
+    BRIGHT_GREEN*    = "\x1b[92m"
+    BRIGHT_YELLOW*   = "\x1b[93m"
+    BRIGHT_BLUE*     = "\x1b[94m"
+    BRIGHT_MAGENTA*  = "\x1b[95m"
+    BRIGHT_CYAN*     = "\x1b[96m"
+    BRIGHT_WHITE*    = "\x1b[97m"
 
 ## START ##
 ###########
@@ -65,7 +82,24 @@ var
   CFLAGS, LDFLAGS = "-O0"
   DEFINES = "-d:release"
 
-if MODE == "release":
+if MODE == "extreme":
+  CFLAGS = "-march=native -mtune=native -Ofast " &
+              "-flto -pipe -fmerge-all-constants " &
+              "-fno-strict-aliasing -fno-ident -fno-rtti " &
+              "-fno-asynchronous-unwind-tables " &
+              "-fno-unwind-tables -ffunction-sections " &
+              "-fdata-sections -s"
+
+  LDFLAGS = "-Wl,-Ofast,-flto,-Tscripts/release.ld,--gc-sections,--build-id=none"
+
+  DEFINES = "--threads:on --opt:speed " &
+                "-x:off -a:off --debuginfo:off " &
+                "--stackTrace:off --lineTrace:off " &
+                "-d:release -d:extreme --mm:arc " &
+                "-d:strip -d:lto --maxLoopIterationsVM:9999999999"
+
+
+elif MODE == "optimized":
   CFLAGS = "-march=native -mtune=native -O3 " &
               "-flto -pipe -fmerge-all-constants " &
               "-fno-strict-aliasing -fno-ident -fno-rtti " &
@@ -78,21 +112,55 @@ if MODE == "release":
   DEFINES = "--threads:on --opt:speed " &
                 "-x:off -a:off --debuginfo:off " &
                 "--stackTrace:off --lineTrace:off " &
+                "-d:release -d:optimized --mm:arc " &
                 "-d:strip -d:lto --maxLoopIterationsVM:9999999999"
+
+elif MODE == "release":
+  CFLAGS = "-march=x86-64 -mtune=generic -O2 " &
+              "-flto -pipe -fmerge-all-constants " &
+              "-fno-strict-aliasing -fno-ident -fno-rtti " &
+              "-fno-asynchronous-unwind-tables " &
+              "-fno-unwind-tables -ffunction-sections " &
+              "-fdata-sections -s"
+
+  LDFLAGS = "-Wl,-O2,-flto,-Tscripts/release.ld,--gc-sections,--build-id=none"
+
+  DEFINES = "--threads:on --opt:speed " &
+                "-x:on -a:off --debuginfo:off " &
+                "--stackTrace:on --lineTrace:off " &
+                "-d:release --mm:arc " &
+                "-d:strip -d:lto --maxLoopIterationsVM:9999999999"
+
+elif MODE == "tiny":
+  CFLAGS = "-march=native -mtune=native -Os " &
+              "-flto -pipe -fmerge-all-constants " &
+              "-fno-strict-aliasing -fno-ident -fno-rtti " &
+              "-fno-asynchronous-unwind-tables " &
+              "-fno-unwind-tables -ffunction-sections " &
+              "-fdata-sections -s"
+
+  LDFLAGS = "-Wl,-Os,-flto,-Tscripts/release.ld,--gc-sections,--build-id=none"
+
+  DEFINES = "--threads:on --opt:speed " &
+                "-x:off -a:off --debuginfo:off " &
+                "--stackTrace:off --lineTrace:off " &
+                "-d:release -d:tiny --mm:arc " &
+                "-d:strip -d:lto --maxLoopIterationsVM:9999999999"
+
 elif MODE == "debug":
   CFLAGS = "-march=x86-64 -mtune=generic -O0 " &
-              "-g -pipe"
+              "-g -pipe -fno-inline -fno-omit-frame-pointer"
 
   LDFLAGS = "-Wl,-O0,-Tscripts/debug.ld"
 
   DEFINES = "--threads:on --opt:none " &
               "-x:on -a:on --debuginfo:on " &
               "--stackTrace:on --lineTrace:on " &
-              " -d:debug " & "--maxLoopIterationsVM:9999999999"
+              " -d:debug --mm:arc --maxLoopIterationsVM:9999999999"
 else:
-  logFail("""Build type not defined. Please edit/create the compile.mode and enter
-              release or debug depending on your desired build type. Debug build 
-              type is only reccomended for developers"""); quit(1)
+  logFail("""Build type incorrect: """ & MODE & """Please edit/create the compile.mode and ensure
+there is no whitespaces/newlines in the file. Select your desired build type and start this script 
+again. Warning: Debug build type is only reccomended for developers"""); quit(1)
 
 type DependencyType = enum 
   Required, Optional
@@ -187,5 +255,5 @@ proc compileBinaries(srcfile, filename, extradefines: string) =
 ## Actually make the fuckin bastards, hell most of
 ## this prep was for nothin but oh well :3
 
-compileBinaries("src/tetorc_loader/main.nim", "tetorc-ldr.bin", "loader")
-#compileBinaries("src/tetorc_service.nim", "tetorc-svc.bin", "tetorc-svc")
+compileBinaries("src/tetorc_loader.nim", "tetorc-ldr.bin", "loader")
+#compileBinaries("src/tetorc_daemon.nim", "tetorc-dae.bin", "daemon")
