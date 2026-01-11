@@ -1,8 +1,5 @@
 import posix
 
-## START ##
-###########
-
 
 
 type 
@@ -31,7 +28,7 @@ proc posix_spawn*(
     envp: ptr ptr cchar):
     cint {.importc, header: "<spawn.h>".}
 
-when not defined(tiny) or not defined(daemon):
+when not defined(tiny) or not defined(loader):
     proc posix_spawnp*(
         pid: ptr Pid,
         path: cstring,
@@ -42,7 +39,7 @@ when not defined(tiny) or not defined(daemon):
         cint {.importc, header: "<spawn.h>".}
 
 
-when not defined(tiny) or not defined(daemon):
+when not defined(tiny) or not defined(loader):
     proc posix_spawn_file_actions_init*(
         actions: ptr PosixSpawnFileActions):
         cint {.importc, header: "<spawn.h>".}

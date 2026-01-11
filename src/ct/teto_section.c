@@ -15,6 +15,6 @@ struct teto_section {
         .ver_major = 1,
         .ver_mid = 4,
         .ver_minor = 2,
-        .rel_tag = {'a','l','p','h','a','4'},
+        .rel_tag = {'a','l','p','h','a','5'},
         .reserved = {0},
     };

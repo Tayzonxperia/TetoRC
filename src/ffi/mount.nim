@@ -1,8 +1,5 @@
 import posix
 
-## START ##
-###########
-
 
 
 proc mount*(

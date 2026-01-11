@@ -20,12 +20,12 @@ const
        tch its messy, but it shall
        suffice... hopefully ]#
 
-template snPrint*(
+template snPrint(
     fd: FileDesc,
     fmt: untyped,
     args: varargs[untyped])
     = 
-    var buf: array[256, char]
+    var buf: array[256, char] # 256B buffer
     block A:
         let size = snprintf(addr buf[0], csize_t(buf.len), fmt, args)
         if size >= buf.len or size < 0:
@@ -40,7 +40,7 @@ template snTrace*(
     fmt: untyped,
     args: varargs[untyped])
     =
-    var buf: array[2048, char]
+    var buf: array[2048, char] # 2KB buffer
     block A:
         let size = snprintf(addr buf[0], csize_t(buf.len), fmt, args)
         if size >= buf.len or size < 0:
@@ -85,4 +85,3 @@ template safePrint*(
         snPrint(STDOUT_fd, fmt, nil)
     of Trace:
         snTrace(STDOUT_fd, fmt, nil)
-

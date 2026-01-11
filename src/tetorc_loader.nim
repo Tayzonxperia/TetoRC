@@ -1,16 +1,7 @@
 import posix, syscall
 
-import "sys/init/sighandler"
+import "ffi/mount"
+import "core/sighandler"
 
 {.compile: "ct/teto_section.c".}
-
-## START ##
-###########
-
-
-
-regSigHandler() 
-
-if getpid() != 1:
-    discard kill(getPid(), SIGABRT)
 
