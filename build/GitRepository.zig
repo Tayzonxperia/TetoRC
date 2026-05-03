@@ -66,7 +66,7 @@ pub fn fromBuild(b: *Build) !GitRepository
             if (!ascii.isAlphanumeric(char.*) and char.* != '-') char.* = '-';
         }
 
-        break :execute mem.trimEnd(u8, ret, "\r\n ");
+        break :execute mem.trimEnd(u8, ret, "-\r\n ");
     };
 
     const tag: ?[]const u8 = execute: {
@@ -92,7 +92,6 @@ pub fn fromBuild(b: *Build) !GitRepository
         };
 
     const was_modified = exitCode != 0;
-
 
     return .{
         .short_hash = short_hash,

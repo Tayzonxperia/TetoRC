@@ -17,8 +17,8 @@ const BuildZigZon = @import("build.zig.zon");
 /// as `zig build` is executed
 pub fn build(b: *Build) void
 {
-    const compileOptions: CompileOptions = .fromBuild(b);
-    const compilePolicy: CompilePolicy = .fromCompileOptions(compileOptions);
+    const compileOptions: CompileOptions = CompileOptions.fromBuild(b);
+    const compilePolicy: CompilePolicy = CompilePolicy.fromCompileOptions(compileOptions);
 
     const resolvedTarget = b.resolveTargetQuery(.{
         .cpu_arch = compileOptions.cpu_arch,
@@ -26,8 +26,8 @@ pub fn build(b: *Build) void
         .abi = compileOptions.abi,
     });
 
-    const targetCapability: TargetCapability = .fromResolvedTarget(resolvedTarget);
-    const gitRepository = GitRepository.fromBuild(b) catch unreachable;
+    const targetCapability: TargetCapability = TargetCapability.fromResolvedTarget(resolvedTarget);
+    const gitRepository: GitRepository = GitRepository.fromBuild(b) catch unreachable;
 
     std.debug.print("\n", .{});
     compileOptions.displayDebug();
