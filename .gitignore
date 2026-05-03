@@ -1,21 +1,88 @@
-Build/bin/*
-Build/lib/*
-Build/tmp/*
-tetorc-*
-nimcache
-non-pub
-junk-to-be-redone*
-STYLE.md
+# Output directories
+output
+target
 
-log
-*.bak
-*.o
-*.pat
-*.ssh
-*.ignore
+# Junk
+*~
 *.tmp
 *.temp
-*.stub
+*.swp
+*.swo
 *.log
-*.AppImage
+*.bak
+*.old
+*.orig
+.DS_Store
+Thumbs.db
+desktop.ini
 
+# Generic object files
+*.o
+*.obj
+*.lo
+*.a
+*.pdb
+*.lib
+*.dll
+*.so
+*.dylib
+
+# Executables / binaries
+*.exe
+*.out
+*.app
+*.bin
+*.elf
+
+# Zig files
+zig-cache/
+zig-out/
+.zig-cache/
+.zig-out/
+
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (CLion, IntelliJ, etc.)
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim / Neovim
+*.vim
+Session.vim
+.netrwhist
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# Shell history (never commit this lmaoo)
+.bash_history
+.zsh_history
+.history
+
+# Perf / profiling dumps
+perf.data
+perf.data.*
+core
+core.*
+vgcore.*
+
+# Windows
+$RECYCLE.BIN/
+ehthumbs.db
+Desktop.ini
+
+# macOS
+.AppleDouble
+.LSOverride
+._*

@@ -1,0 +1,11 @@
+*           text=auto eol=lf
+*.sh        eol=lf
+*.bash      eol=lf
+
+*.zig       text diff=zig
+
+*.toml      text
+*.md        text
+*.txt       text
+
+build/**    linguist-generated=true
