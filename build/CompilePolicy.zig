@@ -12,10 +12,10 @@ const CompileOptions = @import("CompileOptions.zig");
 
 
 strip:              bool,
-stackprotector:     bool,
-stackcheck:         bool,
+stack_protector:     bool,
+stack_check:         bool,
 valgrind:           bool,
-omitframepointer:   bool,
+omit_frame_pointer:   bool,
 
 
 pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
@@ -29,7 +29,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
             => true,
         },
 
-        .stackprotector = switch (opts.optimizemode) {
+        .stack_protector = switch (opts.optimizemode) {
             .Debug,
             => false,
 
@@ -37,7 +37,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
             => true,
         },
 
-        .stackcheck = switch (opts.optimizemode) {
+        .stack_check = switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
             => true,
 
@@ -56,7 +56,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
         else
             false,
 
-        .omitframepointer = switch (opts.optimizemode) {
+        .omit_frame_pointer = switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
             => false,
 
@@ -71,10 +71,10 @@ pub fn toBuildStepOptions(self: *CompilePolicy, b: *Build) *Build.Step.Options
     const opts = b.addOptions();
 
     opts.addOption(bool, "has_strip", self.strip);
-    opts.addOption(bool, "has_stackprotector", self.stackprotector);
-    opts.addOption(bool, "has_stackcheck", self.stackcheck);
+    opts.addOption(bool, "has_stackprotector", self.stack_protector);
+    opts.addOption(bool, "has_stackcheck", self.stack_check);
     opts.addOption(bool, "has_valgrind", self.valgrind);
-    opts.addOption(bool, "has_omitframepointer", self.omitframepointer);
+    opts.addOption(bool, "has_omitframepointer", self.omit_frame_pointer);
 
     return opts;
 }
@@ -82,20 +82,20 @@ pub fn toBuildStepOptions(self: *CompilePolicy, b: *Build) *Build.Step.Options
 pub inline fn displayDebug(self: CompilePolicy) void
 {
     debug.print(
-        \\         ::CompilePolicy::
-        \\  ==============================
-        \\    strip:              {any}
-        \\    stackprotector:     {any}
-        \\    stackcheck:         {any}
-        \\    valgrind:           {any}
-        \\    omitframepointer:   {any}
-        \\  ==============================
+        \\           ::CompilePolicy::
+        \\  ================================
+        \\    strip:                {any}
+        \\    stack_protector:      {any}
+        \\    stack_check:          {any}
+        \\    valgrind:             {any}
+        \\    omit_frame_pointer:   {any}
+        \\  ================================
         \\
     , .{
         self.strip,
-        self.stackprotector,
-        self.stackcheck,
+        self.stack_protector,
+        self.stack_check,
         self.valgrind,
-        self.omitframepointer,
+        self.omit_frame_pointer,
     });
 }

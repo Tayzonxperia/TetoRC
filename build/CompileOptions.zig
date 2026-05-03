@@ -14,8 +14,8 @@ const Target = std.Target;
 optimizemode:   builtin.OptimizeMode,
 linkmode:       builtin.LinkMode,
 codemodel:      builtin.CodeModel,
-cpuarch:        Target.Cpu.Arch,
-ostag:          Target.Os.Tag,
+cpu_arch:        Target.Cpu.Arch,
+os_tag:          Target.Os.Tag,
 abi:            Target.Abi,
 
 
@@ -40,13 +40,13 @@ pub fn fromBuild(b: *Build) CompileOptions
         "TetoRC builtin code model"
         ) orelse .default,
 
-        .cpuarch = b.option(
+        .cpu_arch = b.option(
         Target.Cpu.Arch,
         "cpuarch",
         "TetoRC target CPU arch"
         ) orelse .x86_64,
 
-        .ostag = b.option(
+        .os_tag = b.option(
         Target.Os.Tag,
         "ostag",
         "TetoRC target OS tag"
@@ -67,8 +67,8 @@ pub fn toBuildStepOptions(self: *CompileOptions, b: *Build) *Build.Step.Options
     opts.addOption(builtin.OptimizeMode, "builtin_OptimizeMode", self.optimizemode);
     opts.addOption(builtin.LinkMode, "builtin_LinkMode", self.linkmode);
     opts.addOption(builtin.CodeModel, "builtin_CodeModel", self.codemodel);
-    opts.addOption(Target.Cpu.Arch, "Target_Cpu_Arch", self.cpuarch);
-    opts.addOption(Target.Os.Tag, "Target_Os_Tag", self.ostag);
+    opts.addOption(Target.Cpu.Arch, "Target_Cpu_Arch", self.cpu_arch);
+    opts.addOption(Target.Os.Tag, "Target_Os_Tag", self.os_tag);
     opts.addOption(Target.Abi, "Target_Abi", self.abi);
 
     return opts;
@@ -82,8 +82,8 @@ pub inline fn displayDebug(self: CompileOptions) void
         \\     optimizemode:       {any}
         \\     linkmode:           {any}
         \\     codemodel:          {any}
-        \\     cpuarch:            {any}
-        \\     ostag:              {any}
+        \\     cpu_arch:           {any}
+        \\     os_tag:             {any}
         \\     abi:                {any}
         \\  ==============================
         \\
@@ -91,8 +91,8 @@ pub inline fn displayDebug(self: CompileOptions) void
         self.optimizemode,
         self.linkmode,
         self.codemodel,
-        self.cpuarch,
-        self.ostag,
+        self.cpu_arch,
+        self.os_tag,
         self.abi,
     });
 }

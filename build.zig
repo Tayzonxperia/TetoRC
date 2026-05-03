@@ -6,6 +6,7 @@ const Build = std.Build;
 const CompileOptions = @import("build/CompileOptions.zig");
 const CompilePolicy = @import("build/CompilePolicy.zig");
 const TargetCapability = @import("build/TargetCapability.zig");
+const GitRepository = @import("build/GitRepository.zig");
 
 const BuildZigZon = @import("build.zig.zon");
 
@@ -20,12 +21,13 @@ pub fn build(b: *Build) void
     const compilePolicy: CompilePolicy = .fromCompileOptions(compileOptions);
 
     const resolvedTarget = b.resolveTargetQuery(.{
-        .cpu_arch = compileOptions.cpuarch,
-        .os_tag = compileOptions.ostag,
+        .cpu_arch = compileOptions.cpu_arch,
+        .os_tag = compileOptions.os_tag,
         .abi = compileOptions.abi,
     });
 
     const targetCapability: TargetCapability = .fromResolvedTarget(resolvedTarget);
+    const gitRepository = GitRepository.fromBuild(b) catch unreachable;
 
     std.debug.print("\n", .{});
     compileOptions.displayDebug();
@@ -33,6 +35,8 @@ pub fn build(b: *Build) void
     compilePolicy.displayDebug();
     std.debug.print("\n", .{});
     targetCapability.displayDebug();
+    std.debug.print("\n", .{});
+    gitRepository.displayDebug();
     std.debug.print("\n", .{});
 
 }
