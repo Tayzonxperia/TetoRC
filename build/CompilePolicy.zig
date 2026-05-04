@@ -23,13 +23,13 @@ force_lld:          bool,
 
 pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
 {
-    const strip: bool = detemine: {
+    const strip: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<strip>"});
+            "Determining <{s}> policy...",
+            .{"strip"});
 
-        break :detemine switch (opts.optimizemode) {
+        break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
             => false,
 
@@ -41,8 +41,8 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     const stack_protector: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<stack_protector>"});
+            "Determining <{s}> policy...",
+            .{"stack_protector"});
 
         break :determine switch (opts.optimizemode) {
             .Debug,
@@ -56,8 +56,8 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     const stack_check: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<stack_check>"});
+            "Determining <{s}> policy...",
+            .{"stack_check"});
 
         break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
@@ -71,8 +71,8 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     const valgrind: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<valgrind>"});
+            "Determining <{s}> policy...",
+            .{"valgrind"});
 
         break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
@@ -86,7 +86,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     const omit_frame_pointer: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
+            "Determining <{s}> policy...",
             .{"<omit_frame_pointer>"});
 
         break :determine switch (opts.optimizemode) {
@@ -101,30 +101,30 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     const force_llvm: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<force_llvm>"});
+            "Determining <{s}> policy...",
+            .{"force_llvm"});
 
         break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
-            => true,
+            => false,
 
             .ReleaseSmall, .ReleaseFast,
-            => false,
+            => true,
         };
     };
 
     const force_lld: bool = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} policy...",
-            .{"<force_lld>"});
+            "Determining <{s}> policy...",
+            .{"force_lld"});
 
         break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
-            => true,
+            => false,
 
             .ReleaseSmall, .ReleaseFast,
-            => false,
+            => true,
         };
     };
 
@@ -139,7 +139,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
     };
 }
 
-pub fn toBuildStepOptions(self: *CompilePolicy, b: *Build) *Build.Step.Options
+pub fn toBuildStepOptions(self: CompilePolicy, b: *Build) *Build.Step.Options
 {
     const opts = b.addOptions();
 
@@ -165,7 +165,7 @@ pub inline fn displayDebug(self: CompilePolicy) void
         \\    valgrind:             {any}
         \\    omit_frame_pointer:   {any}
         \\    force_llvm:           {any}
-        \\    force_lld:           {any}
+        \\    force_lld:            {any}
         \\  ================================
         \\
     , .{

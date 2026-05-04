@@ -23,42 +23,91 @@ abi:            Target.Abi,
 
 pub fn fromBuild(b: *Build) CompileOptions
 {
-    return .{
-        .optimizemode = b.option(
+    const optimizemode = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"optimizemode"});
+
+        break :create b.option(
             builtin.OptimizeMode,
             "optimizemode",
-            "TetoRC builtin optimize mode"
-        ) orelse .Debug,
+            "TetoRC builtin optimize mode",
+        ) orelse .Debug;
+    };
 
-        .linkmode = b.option(
+    const linkmode = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"linkmode"});
+
+        break :create b.option(
             builtin.LinkMode,
             "linkmode",
-            "TetoRC builtin link mode"
-        ) orelse .dynamic,
+            "TetoRC builtin link mode",
+        ) orelse .dynamic;
+    };
 
-        .codemodel = b.option(
+    const codemodel = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"codemodel"});
+
+        break :create b.option(
             builtin.CodeModel,
             "codemodel",
             "TetoRC builtin code model"
-        ) orelse .default,
+        ) orelse .default;
+    };
 
-        .cpu_arch = b.option(
+    const cpu_arch = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"cpu_arch"});
+
+        break :create b.option(
             Target.Cpu.Arch,
-            "cpuarch",
+            "cpu_arch",
             "TetoRC target CPU arch"
-        ) orelse .x86_64,
+        ) orelse .x86_64;
+    };
 
-        .os_tag = b.option(
+    const os_tag = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"os_tag"});
+
+        break :create b.option(
             Target.Os.Tag,
-            "ostag",
+            "os_tag",
             "TetoRC target OS tag"
-        ) orelse .linux,
+        ) orelse .linux;
+    };
 
-        .abi =  b.option(
+    const abi = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"abi"});
+
+        break :create b.option(
             Target.Abi,
             "abi",
             "TetoRC target ABI"
-        ) orelse .gnu,
+        ) orelse .gnu;
+    };
+
+    return .{
+        .optimizemode = optimizemode,
+        .linkmode = linkmode,
+        .codemodel = codemodel,
+        .cpu_arch = cpu_arch,
+        .os_tag = os_tag,
+        .abi = abi,
     };
 }
 
