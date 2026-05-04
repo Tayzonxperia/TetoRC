@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 //! TetoRC capability tags to determine whether a target is able to run TetoRC correctly
-const TargetCapability= @This();
+const TargetCapability = @This();
 
 const std = @import("std");
 const Build = std.Build;
@@ -17,17 +17,14 @@ os_score:       Level,
 abi_score:      Level,
 
 
-/// - **min** -> TetoRC may not work for this target, or may be broken.
-///
-/// - **mid** -> TetoRC has support, but may be buggy or preform worse on this target.
-///
-/// - **max** -> TetoRC has full support for this target, it has been tested and will be the most stable.
-///
 pub const Level = enum(u2)
 {
     min = 1,
     mid = 2,
     max = 3,
+
+    pub inline fn toInteger(comptime self: @This()) u8
+    { return @intFromEnum(self); }
 };
 
 pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
@@ -35,8 +32,8 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
     const cpuSupport: Level = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} capability score...",
-            .{"<cpuSupport>"});
+            "Determining <{s}> capability score...",
+            .{"cpuSupport"});
 
         const ret: Level = switch (tgt.result.cpu.arch) {
             .x86, .x86_64,
@@ -58,8 +55,8 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
     const osSupport: Level = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} capability score...",
-            .{"<osSupport>"});
+            "Determining <{s}> capability score...",
+            .{"osSupport"});
 
         const ret: Level = switch (tgt.result.os.tag) {
             .linux,
@@ -81,8 +78,8 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
     const abiSupport: Level = determine: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Determining {s} capability score...",
-            .{"<abiSupport>"});
+            "Determining <{s}> capability score...",
+            .{"abiSupport"});
 
         const ret: Level = if (tgt.result.abi.isGnu())
             Level.max
@@ -104,6 +101,26 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
         .os_score = osSupport,
         .abi_score = abiSupport,
     };
+}
+
+pub fn checkScores(self: TargetCapability) void
+{
+    switch (self.overall_score) {
+        .min    => MessageLogger.logMessage(
+            MessageLogger.Level.warn,
+            "Target unsupported! Expect compilation issues -> (overall_score: {d})"
+            ,.{self.overall_score}),
+
+        .mid    => MessageLogger.logMessage(
+            MessageLogger.Level.warn,
+            "Target untested! Expect runtime issues. (overall_score: {d})"
+            ,.{self.overall_score}),
+
+        .max    => MessageLogger.logMessage(
+            MessageLogger.Level.okay,
+            "Target supported! Expect clean compilation -> (overall_score: {d})"
+            ,.{self.overall_score}),
+    }
 }
 
 pub inline fn displayDebug(self: TargetCapability) void

@@ -1,15 +1,15 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
-//! TetoRC Git repository data and infomation gathered at compile time
-const GitRepository:    type = @This();
+//! TetoRC Git repository data and information gathered at compile time
+const GitRepository = @This();
 
-const std:      type = @import("std");
-const ascii:    type = std.ascii;
-const Build:    type = std.Build;
-const debug:    type = std.debug;
-const mem:      type  = std.mem;
+const std = @import("std");
+const ascii = std.ascii;
+const Build = std.Build;
+const debug = std.debug;
+const mem = std.mem;
 
-const MessageLogger:    type = @import("MessageLogger.zig");
+const MessageLogger = @import("MessageLogger.zig");
 
 
 
@@ -23,7 +23,7 @@ is_dirty:   bool,
 pub const Error = error
 {
     GitNotFound,
-    GitNotRepository
+    GitNotRepository,
 };
 
 pub fn fromBuild(b: *Build) !GitRepository
@@ -33,8 +33,8 @@ pub fn fromBuild(b: *Build) !GitRepository
     const short_hash: []const u8 = execute: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Executing command to obtain {s}...",
-            .{"<short_hash>"});
+            "Executing command to obtain <{s}>...",
+            .{"short_hash"});
 
         const ret = b.runAllowFail(
             &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "rev-parse", "--short", "HEAD" },
@@ -50,8 +50,8 @@ pub fn fromBuild(b: *Build) !GitRepository
     const long_hash: []const u8 = execute: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Executing command to obtain {s}...",
-            .{"<long_hash>"});
+            "Executing command to obtain <{s}>...",
+            .{"long_hash"});
 
         const ret = b.runAllowFail(
             &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "rev-parse", "HEAD" },
@@ -67,8 +67,8 @@ pub fn fromBuild(b: *Build) !GitRepository
     const branch: []const u8 = execute: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Executing command to obtain {s}...",
-            .{"<branch>"});
+            "Executing command to obtain <{s}>...",
+            .{"branch"});
 
         const ret = b.runAllowFail(
             &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "rev-parse", "--abbrev-ref", "HEAD" },
@@ -89,8 +89,8 @@ pub fn fromBuild(b: *Build) !GitRepository
     const tag: ?[]const u8 = execute: {
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
-            "Executing command to obtain {s}...",
-            .{"<tag>"});
+            "Executing command to obtain <{s}>...",
+            .{"tag"});
 
         const ret = b.runAllowFail(
             &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "describe", "--exact-match", "--tags" },
@@ -106,8 +106,8 @@ pub fn fromBuild(b: *Build) !GitRepository
 
     MessageLogger.logMessage(
         MessageLogger.Level.expr,
-        "Executing command to obtain {s}...",
-        .{"<is_dirty>"});
+        "Executing command to obtain <{s}>...",
+        .{"is_dirty"});
 
     _ = b.runAllowFail(
             &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "diff", "--quiet", "--exit-code" },

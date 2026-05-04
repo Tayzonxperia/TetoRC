@@ -8,21 +8,21 @@
 
 ## Formatting:
 
-We use a consistant, firm and efficient formatting scheme throughout the TetoRC codebase. Note that temporary code, or development branches need not follow this.
+We use a consistent, firm, and efficient formatting scheme throughout the TetoRC codebase. Note that temporary code, or development branches need not follow this.
 
 - Use the provided `.editorconfig` to ensure the proper tabs and widths are applied. We use **4** char indent, tabs are **NOT** allowed unless your editor converts them to spaces
-automatically. Maximum line length is **110** chars, reccomended is **90-100**~ chars.
+automatically. Maximum line length is **110** chars; recommended is **90–100**~ chars.
 
-- We require a license identifer at the begining of every file, also with top-level module comments for files of any importance, including module root files, here is a Zig example:
+- We require a license identifier at the beginning of every file, also with top-level module comments for files of any importance, including module root files. Here is a Zig example:
 ```zig
-// SPDX-License-Identifer: <LICENCE>
-// Copyright (C) <START>-<CURRENT> <NAME> (<IDENTIFER>)
-//! Explaination of module, uses, functionally and potential pitfalls, etc...
+// SPDX-License-Identifier: <LICENCE>
+// Copyright (C) <START>-<CURRENT> <NAME> (<IDENTIFIER>)
+//! Explanation of module, uses, functionality, and potential pitfalls, etc...
 ```
 Documentation comments (`///`) should also be used where it would make sense, especially for large structs or complex functions. Please reserve regular comments (`//`) for small
-explainations, hacks, or local (uncommitable) uses.
+explanations, hacks, or local (uncommitable) uses.
 
-- Module organization should be strictly alphabetical, and should be spaced-out evenly. Do not alias to a different identifier, so we can always trace them back again, for
+- Module organization should be strictly alphabetical, and should be spaced out evenly. Do not alias to a different identifier, so we can always trace them back again. For
 example, do this:
 ```zig
 const ExampleModule = @This();
@@ -114,7 +114,7 @@ Leave a newline for the first declaration in these functions.
 
 | Type | Naming Style | Example |
 |------|--------------|---------|
-| Function-scoped| `camelCase` | `functionVariable` |
+| Function-scoped | `camelCase` | `functionVariable` |
 | File-scoped | *N/A* | *N/A* |
 
 #### Constants
@@ -138,7 +138,7 @@ if (foo.bar == foo.baz) {
 }
 ```
 
-- File-scoped braces are to use Allmans style:
+- File-scoped braces are to use Allman's style:
 ```zig
 pub fn foo(bar: u8) void
 {
