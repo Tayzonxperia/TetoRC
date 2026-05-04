@@ -1,0 +1,16 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
+.{
+    .name                   = .TetoRC,
+    .fingerprint            = 0xb78187556c639d0c,
+    .version                = "1.5.0-alpha",
+    .minimum_zig_version    = "0.16.0",
+    .paths                  = .{
+        "source",
+        "build",
+        "build.zig",
+        "build.zig.zon",
+        "LICENCE",
+        "README.md",
+    },
+}
