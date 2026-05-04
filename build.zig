@@ -2,6 +2,7 @@
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 const std = @import("std");
 const Build = std.Build;
+const debug = std.debug;
 
 const CompileOptions = @import("build/CompileOptions.zig");
 const CompilePolicy = @import("build/CompilePolicy.zig");
@@ -27,16 +28,16 @@ pub fn build(b: *Build) void
     });
 
     const targetCapability: TargetCapability = TargetCapability.fromResolvedTarget(resolvedTarget);
-    const gitRepository: GitRepository = GitRepository.fromBuild(b) catch unreachable;
+    const gitRepository: GitRepository = GitRepository.fromBuild(b) catch |err| debug.panic("FATAL ERROR: {any}", .{err});
 
-    std.debug.print("\n", .{});
+    debug.print("\n", .{});
     compileOptions.displayDebug();
-    std.debug.print("\n", .{});
+    debug.print("\n", .{});
     compilePolicy.displayDebug();
-    std.debug.print("\n", .{});
+    debug.print("\n", .{});
     targetCapability.displayDebug();
-    std.debug.print("\n", .{});
+    debug.print("\n", .{});
     gitRepository.displayDebug();
-    std.debug.print("\n", .{});
+    debug.print("\n", .{});
 
 }

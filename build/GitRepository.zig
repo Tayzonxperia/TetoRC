@@ -11,11 +11,11 @@ const mem = std.mem;
 
 
 
-short_hash:     []const u8,
-long_hash:      []const u8,
-branch:         []const u8,
-tag:            ?[]const u8,
-was_modified:    bool,
+short_hash: []const u8,
+long_hash:  []const u8,
+branch:     []const u8,
+tag:        ?[]const u8,
+is_dirty:   bool,
 
 
 pub const Error = error
@@ -83,22 +83,22 @@ pub fn fromBuild(b: *Build) !GitRepository
     };
 
     _ = b.runAllowFail(
-        &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "diff", "--quiet", "--exit-code" },
-        &exitCode,
-        .ignore) catch |err| switch (err) {
-            error.FileNotFound      => return error.GitNotFound,
-            error.ExitCodeFailure   => {},  // Expected behavior
-            else                    => return err,
-        };
+            &[_][]const u8 { "git", "-C", b.build_root.path orelse ".", "diff", "--quiet", "--exit-code" },
+            &exitCode,
+            .ignore) catch |err| switch (err) {
+                error.FileNotFound      => return error.GitNotFound,
+                error.ExitCodeFailure   => {},  // Expected behavior
+                else                    => return err,
+            };
 
-    const was_modified = exitCode != 0;
+    const is_dirty = exitCode != 0;
 
     return .{
         .short_hash = short_hash,
         .long_hash = long_hash,
         .branch = branch,
         .tag = tag,
-        .was_modified = was_modified,
+        .is_dirty = is_dirty,
     };
 }
 
@@ -106,19 +106,19 @@ pub inline fn displayDebug(self: GitRepository) void
 {
     debug.print(
         \\        ::GitRepository::
-        \\  ==============================
-        \\      short_hash:     {s}
-        \\      long_hash:      {s}
-        \\      branch:         {s}
-        \\      tag:            {s}
-        \\      was_modified:   {any}
-        \\  ==============================
+        \\  =============================
+        \\      short_hash: {s}
+        \\      long_hash:  {s}
+        \\      branch:     {s}
+        \\      tag:        {s}
+        \\      is_dirty:   {any}
+        \\  =============================
         \\
     , .{
         self.short_hash,
         self.long_hash,
         self.branch,
         self.tag orelse "<missing>",
-        self.was_modified,
+        self.is_dirty,
     });
 }

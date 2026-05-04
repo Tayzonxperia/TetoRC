@@ -14,8 +14,8 @@ const Target = std.Target;
 optimizemode:   builtin.OptimizeMode,
 linkmode:       builtin.LinkMode,
 codemodel:      builtin.CodeModel,
-cpu_arch:        Target.Cpu.Arch,
-os_tag:          Target.Os.Tag,
+cpu_arch:       Target.Cpu.Arch,
+os_tag:         Target.Os.Tag,
 abi:            Target.Abi,
 
 
@@ -23,39 +23,39 @@ pub fn fromBuild(b: *Build) CompileOptions
 {
     return .{
         .optimizemode = b.option(
-        builtin.OptimizeMode,
-        "optimizemode",
-        "TetoRC builtin optimize mode"
+            builtin.OptimizeMode,
+            "optimizemode",
+            "TetoRC builtin optimize mode"
         ) orelse .Debug,
 
         .linkmode = b.option(
-        builtin.LinkMode,
-        "linkmode",
-        "TetoRC builtin link mode"
+            builtin.LinkMode,
+            "linkmode",
+            "TetoRC builtin link mode"
         ) orelse .dynamic,
 
         .codemodel = b.option(
-        builtin.CodeModel,
-        "codemodel",
-        "TetoRC builtin code model"
+            builtin.CodeModel,
+            "codemodel",
+            "TetoRC builtin code model"
         ) orelse .default,
 
         .cpu_arch = b.option(
-        Target.Cpu.Arch,
-        "cpuarch",
-        "TetoRC target CPU arch"
+            Target.Cpu.Arch,
+            "cpuarch",
+            "TetoRC target CPU arch"
         ) orelse .x86_64,
 
         .os_tag = b.option(
-        Target.Os.Tag,
-        "ostag",
-        "TetoRC target OS tag"
+            Target.Os.Tag,
+            "ostag",
+            "TetoRC target OS tag"
         ) orelse .linux,
 
         .abi =  b.option(
-        Target.Abi,
-        "abi",
-        "TetoRC target ABI"
+            Target.Abi,
+            "abi",
+            "TetoRC target ABI"
         ) orelse .gnu,
     };
 }
