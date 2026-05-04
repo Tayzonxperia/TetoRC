@@ -2,7 +2,7 @@
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 //! TetoRC build system message logger and debugger. Uses `std.debug.print` as
 //! anything more complex is not needed. Uses color codes.
-const MessageLogger = @This();
+const MessageLogger= @This();
 
 const std = @import("std");
 const debug = std.debug;

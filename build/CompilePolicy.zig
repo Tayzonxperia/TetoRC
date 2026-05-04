@@ -7,62 +7,135 @@ const std = @import("std");
 const Build = std.Build;
 const debug = std.debug;
 
+const MessageLogger = @import("MessageLogger.zig");
 const CompileOptions = @import("CompileOptions.zig");
 
 
 
 strip:              bool,
-stack_protector:     bool,
-stack_check:         bool,
+stack_protector:    bool,
+stack_check:        bool,
 valgrind:           bool,
-omit_frame_pointer:   bool,
+omit_frame_pointer: bool,
+force_llvm:         bool,
+force_lld:          bool,
 
 
 pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
 {
-    return .{
-        .strip = switch (opts.optimizemode) {
+    const strip: bool = detemine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<strip>"});
+
+        break :detemine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
             => false,
 
             .ReleaseSmall, .ReleaseFast,
             => true,
-        },
+        };
+    };
 
-        .stack_protector = switch (opts.optimizemode) {
+    const stack_protector: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<stack_protector>"});
+
+        break :determine switch (opts.optimizemode) {
             .Debug,
             => false,
 
             .ReleaseSafe, .ReleaseSmall, .ReleaseFast,
             => true,
-        },
+        };
+    };
 
-        .stack_check = switch (opts.optimizemode) {
-            .Debug, .ReleaseSafe,
-            => true,
+    const stack_check: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<stack_check>"});
 
-            .ReleaseSmall, .ReleaseFast,
-            => false,
-        },
-
-        .valgrind = if (opts.abi.isGnu())
-            switch (opts.optimizemode) {
-                .Debug, .ReleaseSafe,
-                => true,
-
-                .ReleaseSmall, .ReleaseFast,
-                => false,
-            }
-        else
-            false,
-
-        .omit_frame_pointer = switch (opts.optimizemode) {
+        break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,
             => false,
 
             .ReleaseSmall, .ReleaseFast,
             => true,
-        }
+        };
+    };
+
+    const valgrind: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<valgrind>"});
+
+        break :determine switch (opts.optimizemode) {
+            .Debug, .ReleaseSafe,
+            => true,
+
+            .ReleaseSmall, .ReleaseFast,
+            => false,
+        };
+    };
+
+    const omit_frame_pointer: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<omit_frame_pointer>"});
+
+        break :determine switch (opts.optimizemode) {
+            .Debug, .ReleaseSafe,
+            => true,
+
+            .ReleaseSmall, .ReleaseFast,
+            => false,
+        };
+    };
+
+    const force_llvm: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<force_llvm>"});
+
+        break :determine switch (opts.optimizemode) {
+            .Debug, .ReleaseSafe,
+            => true,
+
+            .ReleaseSmall, .ReleaseFast,
+            => false,
+        };
+    };
+
+    const force_lld: bool = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} policy...",
+            .{"<force_lld>"});
+
+        break :determine switch (opts.optimizemode) {
+            .Debug, .ReleaseSafe,
+            => true,
+
+            .ReleaseSmall, .ReleaseFast,
+            => false,
+        };
+    };
+
+    return .{
+        .strip = strip,
+        .stack_protector = stack_protector,
+        .stack_check = stack_check,
+        .valgrind = valgrind,
+        .omit_frame_pointer = omit_frame_pointer,
+        .force_llvm = force_llvm,
+        .force_lld = force_lld
     };
 }
 
@@ -71,10 +144,12 @@ pub fn toBuildStepOptions(self: *CompilePolicy, b: *Build) *Build.Step.Options
     const opts = b.addOptions();
 
     opts.addOption(bool, "has_strip", self.strip);
-    opts.addOption(bool, "has_stackprotector", self.stack_protector);
-    opts.addOption(bool, "has_stackcheck", self.stack_check);
+    opts.addOption(bool, "has_stack_protector", self.stack_protector);
+    opts.addOption(bool, "has_stack_check", self.stack_check);
     opts.addOption(bool, "has_valgrind", self.valgrind);
-    opts.addOption(bool, "has_omitframepointer", self.omit_frame_pointer);
+    opts.addOption(bool, "has_omit_frame_pointer", self.omit_frame_pointer);
+    opts.addOption(bool, "has_force_llvm", self.force_llvm);
+    opts.addOption(bool, "has_force_lld", self.force_lld);
 
     return opts;
 }
@@ -89,6 +164,8 @@ pub inline fn displayDebug(self: CompilePolicy) void
         \\    stack_check:          {any}
         \\    valgrind:             {any}
         \\    omit_frame_pointer:   {any}
+        \\    force_llvm:           {any}
+        \\    force_lld:           {any}
         \\  ================================
         \\
     , .{
@@ -97,5 +174,7 @@ pub inline fn displayDebug(self: CompilePolicy) void
         self.stack_check,
         self.valgrind,
         self.omit_frame_pointer,
+        self.force_llvm,
+        self.force_lld,
     });
 }
