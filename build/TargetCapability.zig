@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 //! TetoRC capability tags to determine whether a target is able to run TetoRC correctly
-const TargetCapability: type = @This();
+const TargetCapability= @This();
 
-const std:      type = @import("std");
-const Build:    type = std.Build;
-const debug:    type = std.debug;
+const std = @import("std");
+const Build = std.Build;
+const debug = std.debug;
 
 const MessageLogger:    type = @import("MessageLogger.zig");
 
@@ -17,13 +17,11 @@ os_score:       Level,
 abi_score:      Level,
 
 
-/// **`Level`** - this value determines the support value of a section, of 1..3, where 1 is the lowest level and 3 is the highest level
+/// - **min** -> TetoRC may not work for this target, or may be broken.
 ///
-/// - **min** -> TetoRC may not work for this target, or may be broken
+/// - **mid** -> TetoRC has support, but may be buggy or preform worse on this target.
 ///
-/// - **mid** -> TetoRC has support, but may be buggy or preform worse on this target
-///
-/// - **max** -> TetoRC has full support for this target, it has been tested and will be the most stable
+/// - **max** -> TetoRC has full support for this target, it has been tested and will be the most stable.
 ///
 pub const Level = enum(u2)
 {
@@ -34,23 +32,27 @@ pub const Level = enum(u2)
 
 pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
 {
-    MessageLogger.logMessage(
-        MessageLogger.Level.expr,
-        "Determining {s} capability score...",
-        .{"<cpuSupport>"});
+    const cpuSupport: Level = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} capability score...",
+            .{"<cpuSupport>"});
 
-    const cpuSupport: Level = switch (tgt.result.cpu.arch) {
-        .x86, .x86_64,
-        .arm, .aarch64,
-        => .max,
+        const ret: Level = switch (tgt.result.cpu.arch) {
+            .x86, .x86_64,
+            .arm, .aarch64,
+            => Level.max,
 
-        .armeb, .aarch64_be,
-        .riscv32, .riscv64,
-        .riscv32be, .riscv64be,
-        => .mid,
+            .armeb, .aarch64_be,
+            .riscv32, .riscv64,
+            .riscv32be, .riscv64be,
+            => Level.mid,
 
-        else
-        => .min
+            else
+            => Level.min
+        };
+
+        break :determine ret;
     };
 
     const osSupport: Level = determine: {
@@ -60,17 +62,17 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
             .{"<osSupport>"});
 
         const ret: Level = switch (tgt.result.os.tag) {
-        .linux,
-        => Level.max,
+            .linux,
+            => Level.max,
 
-        .freebsd,
-        .openbsd,
-        .netbsd,
-        .dragonfly,
-        => Level.mid,
+            .freebsd,
+            .openbsd,
+            .netbsd,
+            .dragonfly,
+            => Level.mid,
 
-        else
-        => Level.min
+            else
+            => Level.min
         };
 
         break :determine ret;
@@ -117,7 +119,6 @@ pub inline fn displayDebug(self: TargetCapability) void
         \\
     , .{
         self.overall_score, self.overall_score,
-
         self.cpu_score, self.cpu_score,
         self.os_score, self.os_score,
         self.abi_score, self.abi_score,

@@ -9,6 +9,8 @@ const Build = std.Build;
 const debug = std.debug;
 const Target = std.Target;
 
+const MessageLogger = @import("MessageLogger.zig");
+
 
 
 optimizemode:   builtin.OptimizeMode,
