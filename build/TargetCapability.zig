@@ -1,11 +1,13 @@
 // SPDX-License-Identifier: GPL-3.0-only
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 //! TetoRC capability tags to determine whether a target is able to run TetoRC correctly
-const TargetCapability = @This();
+const TargetCapability: type = @This();
 
-const std = @import("std");
-const Build = std.Build;
-const debug = std.debug;
+const std:      type = @import("std");
+const Build:    type = std.Build;
+const debug:    type = std.debug;
+
+const MessageLogger:    type = @import("MessageLogger.zig");
 
 
 
@@ -32,6 +34,11 @@ pub const Level = enum(u2)
 
 pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
 {
+    MessageLogger.logMessage(
+        MessageLogger.Level.expr,
+        "Determining {s} capability score...",
+        .{"<cpuSupport>"});
+
     const cpuSupport: Level = switch (tgt.result.cpu.arch) {
         .x86, .x86_64,
         .arm, .aarch64,
@@ -46,27 +53,44 @@ pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
         => .min
     };
 
-    const osSupport: Level = switch (tgt.result.os.tag) {
+    const osSupport: Level = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} capability score...",
+            .{"<osSupport>"});
+
+        const ret: Level = switch (tgt.result.os.tag) {
         .linux,
-        => .max,
+        => Level.max,
 
         .freebsd,
         .openbsd,
         .netbsd,
         .dragonfly,
-        => .mid,
+        => Level.mid,
 
         else
-        => .min
+        => Level.min
+        };
+
+        break :determine ret;
     };
 
-    const abiSupport: Level = if (tgt.result.abi.isGnu())
-        .max
-    else if (tgt.result.abi.isMusl())
-        .mid
-    else
-        .min;
+    const abiSupport: Level = determine: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Determining {s} capability score...",
+            .{"<abiSupport>"});
 
+        const ret: Level = if (tgt.result.abi.isGnu())
+            Level.max
+        else if (tgt.result.abi.isMusl())
+            Level.mid
+        else
+            Level.min;
+
+        break :determine ret;
+    };
 
     return .{
         .overall_score = @enumFromInt(@min(

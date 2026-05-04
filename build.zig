@@ -4,6 +4,7 @@ const std = @import("std");
 const Build = std.Build;
 const debug = std.debug;
 
+const MessageLogger: type = @import("build/MessageLogger.zig");
 const CompileOptions = @import("build/CompileOptions.zig");
 const CompilePolicy = @import("build/CompilePolicy.zig");
 const TargetCapability = @import("build/TargetCapability.zig");
@@ -39,5 +40,11 @@ pub fn build(b: *Build) void
     debug.print("\n", .{});
     gitRepository.displayDebug();
     debug.print("\n", .{});
+
+    MessageLogger.logMessage(.expr, "This is a {s} message\n", .{"expr"});
+    MessageLogger.logMessage(.okay, "This is a {s} message\n", .{"okay"});
+    MessageLogger.logMessage(.warn, "This is a {s} message\n", .{"warn"});
+    MessageLogger.logMessage(.fail, "This is a {s} message\n", .{"fail"});
+
 
 }
