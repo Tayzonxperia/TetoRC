@@ -87,7 +87,7 @@ pub fn fromCompileOptions(opts: CompileOptions) CompilePolicy
         MessageLogger.logMessage(
             MessageLogger.Level.expr,
             "Determining <{s}> policy...",
-            .{"<omit_frame_pointer>"});
+            .{"omit_frame_pointer"});
 
         break :determine switch (opts.optimizemode) {
             .Debug, .ReleaseSafe,

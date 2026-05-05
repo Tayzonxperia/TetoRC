@@ -13,12 +13,13 @@ const MessageLogger = @import("MessageLogger.zig");
 
 
 
-optimizemode:   builtin.OptimizeMode,
-linkmode:       builtin.LinkMode,
-codemodel:      builtin.CodeModel,
-cpu_arch:       Target.Cpu.Arch,
-os_tag:         Target.Os.Tag,
-abi:            Target.Abi,
+optimizemode:       builtin.OptimizeMode,
+linkmode:           builtin.LinkMode,
+codemodel:          builtin.CodeModel,
+cpu_arch:           Target.Cpu.Arch,
+os_tag:             Target.Os.Tag,
+abi:                Target.Abi,
+single_threaded:    bool,
 
 
 pub fn fromBuild(b: *Build) CompileOptions
@@ -101,6 +102,19 @@ pub fn fromBuild(b: *Build) CompileOptions
         ) orelse .gnu;
     };
 
+    const single_threaded = create: {
+        MessageLogger.logMessage(
+            MessageLogger.Level.expr,
+            "Creating <{s}> build option...",
+            .{"single_threaded"});
+
+        break :create b.option(
+            bool,
+            "single_threaded",
+            "TetoRC threading type"
+        ) orelse true;  // For now, needs impl
+    };
+
     return .{
         .optimizemode = optimizemode,
         .linkmode = linkmode,
@@ -108,6 +122,7 @@ pub fn fromBuild(b: *Build) CompileOptions
         .cpu_arch = cpu_arch,
         .os_tag = os_tag,
         .abi = abi,
+        .single_threaded = single_threaded,
     };
 }
 
@@ -121,6 +136,7 @@ pub fn toBuildStepOptions(self: *CompileOptions, b: *Build) *Build.Step.Options
     opts.addOption(Target.Cpu.Arch, "Target_Cpu_Arch", self.cpu_arch);
     opts.addOption(Target.Os.Tag, "Target_Os_Tag", self.os_tag);
     opts.addOption(Target.Abi, "Target_Abi", self.abi);
+    opts.addOption(bool, "is_single_threaded", self.single_threaded);
 
     return opts;
 }
@@ -129,14 +145,15 @@ pub inline fn displayDebug(self: CompileOptions) void
 {
     debug.print(
         \\        ::CompileOptions::
-        \\  ==============================
-        \\     optimizemode:       {any}
-        \\     linkmode:           {any}
-        \\     codemodel:          {any}
-        \\     cpu_arch:           {any}
-        \\     os_tag:             {any}
-        \\     abi:                {any}
-        \\  ==============================
+        \\  ===============================
+        \\     optimizemode:        {any}
+        \\     linkmode:            {any}
+        \\     codemodel:           {any}
+        \\     cpu_arch:            {any}
+        \\     os_tag:              {any}
+        \\     abi:                 {any}
+        \\     single_threadedd:    {any}
+        \\  ===============================
         \\
     , .{
         self.optimizemode,
@@ -145,5 +162,6 @@ pub inline fn displayDebug(self: CompileOptions) void
         self.cpu_arch,
         self.os_tag,
         self.abi,
+        self.single_threaded
     });
 }

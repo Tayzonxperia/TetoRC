@@ -9,6 +9,7 @@ const GitRepository = @import("build/GitRepository.zig");
 const CompileOptions = @import("build/CompileOptions.zig");
 const CompilePolicy = @import("build/CompilePolicy.zig");
 const TargetCapability = @import("build/TargetCapability.zig");
+const ModuleRegister = @import("build/ModuleRegister.zig");
 
 const BuildZigZon = @import("build.zig.zon");
 
@@ -17,9 +18,11 @@ const BuildZigZon = @import("build.zig.zon");
 pub fn build(b: *Build) void
 {
     const gitRepository: GitRepository = GitRepository.fromBuild(b) catch unreachable;
+
     const compileOptions: CompileOptions = CompileOptions.fromBuild(b);
     const compilePolicy: CompilePolicy = CompilePolicy.fromCompileOptions(compileOptions);
-   // const buildStepOptions: *Build.Step.Options = compilePolicy.toBuildStepOptions(b);
+    const compileOptionsOpts: *Build.Step.Options = compileOptions.toBuildStepOptions(b);
+    const compilePolicyOpts: *Build.Step.Options = compilePolicy.toBuildStepOptions(b);
 
     const resolvedTarget: Build.ResolvedTarget = b.resolveTargetQuery(.{
         .cpu_arch = compileOptions.cpu_arch,
@@ -30,6 +33,12 @@ pub fn build(b: *Build) void
     const targetCapability: TargetCapability = TargetCapability.fromResolvedTarget(resolvedTarget);
     targetCapability.checkScores();
 
-    _ = gitRepository;
-    _ = compilePolicy;
+    const mod = ModuleRegister.add(
+        "test",
+        "source/main.zig",
+        .{},
+        compileOptions,
+        compilePolicy,
+        resolvedTarget,
+        b);
 }

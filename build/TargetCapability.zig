@@ -22,9 +22,6 @@ pub const Level = enum(u2)
     min = 1,
     mid = 2,
     max = 3,
-
-    pub inline fn toInteger(comptime self: @This()) u8
-    { return @intFromEnum(self); }
 };
 
 pub fn fromResolvedTarget(tgt: Build.ResolvedTarget) TargetCapability
