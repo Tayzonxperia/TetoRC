@@ -2,43 +2,32 @@
 // Copyright (C) 2025-2026 Taylor (Wakana Kisarazu)
 const std = @import("std");
 const Build = std.Build;
-const debug = std.debug;
 
-const MessageLogger: type = @import("build/MessageLogger.zig");
-const GitRepository = @import("build/GitRepository.zig");
-const CompileOptions = @import("build/CompileOptions.zig");
-const CompilePolicy = @import("build/CompilePolicy.zig");
-const TargetCapability = @import("build/TargetCapability.zig");
-const ModuleRegister = @import("build/ModuleRegister.zig");
-
-const BuildZigZon = @import("build.zig.zon");
-
+const StaticConfig = @import("build/StaticConfig.zig");
+const DynamicConfig = @import("build/DynamicConfig.zig");
+const BinaryMetadata = @import("build/BinaryMetadata.zig");
+const ModuleFactory = @import("build/ModuleFactory.zig");
 
 
 pub fn build(b: *Build) void
 {
-    const gitRepository: GitRepository = GitRepository.fromBuild(b) catch unreachable;
+    const staticConfig: StaticConfig = .{
+        .compilation_flags = .init(b),
+        .feature_flags = .init(b),
+        .build_preset = .init(b)
+    };
+    const staticOptions = staticConfig.toOptions(b);
 
-    const compileOptions: CompileOptions = CompileOptions.fromBuild(b);
-    const compilePolicy: CompilePolicy = CompilePolicy.fromCompileOptions(compileOptions);
-    const compileOptionsOpts: *Build.Step.Options = compileOptions.toBuildStepOptions(b);
-    const compilePolicyOpts: *Build.Step.Options = compilePolicy.toBuildStepOptions(b);
+    const dynamicConfig: DynamicConfig = DynamicConfig.init(staticConfig, b);
+    const dynamicOptions = dynamicConfig.toOptions(b);
 
-    const resolvedTarget: Build.ResolvedTarget = b.resolveTargetQuery(.{
-        .cpu_arch = compileOptions.cpu_arch,
-        .os_tag = compileOptions.os_tag,
-        .abi = compileOptions.abi,
-    });
+    const binaryMetadata: BinaryMetadata = BinaryMetadata.init(b);
 
-    const targetCapability: TargetCapability = TargetCapability.fromResolvedTarget(resolvedTarget);
-    targetCapability.checkScores();
+    const staticModule = staticOptions.createModule();
+    const dynamicModule = dynamicOptions.createModule();
 
-    const mod = ModuleRegister.add(
-        "test",
-        "source/main.zig",
-        .{},
-        compileOptions,
-        compilePolicy,
-        resolvedTarget,
-        b);
+    _ = staticModule;
+    _ = dynamicModule;
+
+    std.debug.print("{s}\n", .{binaryMetadata.version_data.string});
 }

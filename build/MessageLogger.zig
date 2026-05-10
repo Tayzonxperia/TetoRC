@@ -13,11 +13,11 @@ const ColorCode = struct
 {
     code: [:0]const u8,
 
-    inline fn fromSlice(comptime N: []const u8) @This()
-    { comptime return .{ .code = "\x1b[" ++ N ++ "m" }; }
+    inline fn fromSlice(comptime STR: []const u8) @This()
+    { comptime return .{ .code = "\x1b[" ++ STR ++ "m" }; }
 
-    inline fn toSlice(comptime self: @This()) [:0]const u8
-    { comptime return self.code; }
+    inline fn toSlice(comptime SELF: @This()) [:0]const u8
+    { comptime return SELF.code; }
 };
 
 const RESET_CODE:   ColorCode = ColorCode.fromSlice("0");
@@ -35,13 +35,13 @@ pub const Level = enum(u4)
     _
 };
 
-pub fn logMessage(comptime L: Level, comptime fmt: []const u8, args: anytype) void
+pub fn logMessage(comptime L: Level, comptime FMT: []const u8, args: anytype) void
 {
     switch (L) {
-        .expr   => debug.print("[:: " ++ CYAN_CODE.toSlice() ++ "EXPR" ++ RESET_CODE.toSlice() ++ " ::] " ++ fmt ++ "\n", args),
-        .okay   => debug.print("[:: " ++ GREEN_CODE.toSlice() ++ "OKAY" ++ RESET_CODE.toSlice() ++ " ::] " ++ fmt ++ "\n", args),
-        .warn   => debug.print("[:: " ++ YELLOW_CODE.toSlice() ++ "WARN" ++ RESET_CODE.toSlice() ++ " ::] " ++ fmt ++ "\n", args),
-        .fail   => debug.print("[:: " ++ RED_CODE.toSlice() ++ "FAIL" ++ RESET_CODE.toSlice() ++ " ::] " ++ fmt ++ "\n", args),
-        _       => return,
+        .expr   => debug.print("[:: " ++ CYAN_CODE.toSlice() ++ "EXPR" ++ RESET_CODE.toSlice() ++ " ::] " ++ FMT ++ "\n", args),
+        .okay   => debug.print("[:: " ++ GREEN_CODE.toSlice() ++ "OKAY" ++ RESET_CODE.toSlice() ++ " ::] " ++ FMT ++ "\n", args),
+        .warn   => debug.print("[:: " ++ YELLOW_CODE.toSlice() ++ "WARN" ++ RESET_CODE.toSlice() ++ " ::] " ++ FMT ++ "\n", args),
+        .fail   => debug.print("[:: " ++ RED_CODE.toSlice() ++ "FAIL" ++ RESET_CODE.toSlice() ++ " ::] " ++ FMT ++ "\n", args),
+        _       => unreachable  // Assume programmer error,
     }
 }
